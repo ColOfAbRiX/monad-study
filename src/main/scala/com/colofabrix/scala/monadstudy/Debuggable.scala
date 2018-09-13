@@ -148,12 +148,14 @@ object Debuggable {
   def inner6( x: Double ) = Writer6( Math.exp( x ), s"Called inner6($x)" )
 
   def example6( x: Double ): Unit = {
+    // THIS WORKS
     val result = Writer6( x ).flatMap { y1 =>
       inner6(y1).flatMap { y2 =>
         outer6(y2)
       }
     }
 
+    // THIS WORKS
     val result2 = for {
       y1 <- Writer6(x)
     } yield {
@@ -167,18 +169,39 @@ object Debuggable {
     }
     println( result2 )
 
-//    val result3 = for {
-//      y1 <- Writer6(x)
-//      y2 <- inner6( y1 )
-//      y3 <- outer6( y2 )
-//    } yield y3
-//    println( result3 )
+    // THIS DOESN'T WORK
+    val result3 = for {
+      y1 <- Writer6(x)
+      y2 <- inner6( y1 )
+      y3 <- outer6( y2 )
+    } yield y3
+    println( result3 )
 
     println( "EXAMPLE #6 - Scala idiomatic monads" )
     println( s"Input:  $x" )
     println( s"Result: ${result.x}" )
     println( s"Log: \n${result.log}" )
     println( "" )
+  }
+
+  def desugaring(): Unit = {
+    val x = 1.23
+
+    val result2 = Writer6( x ).map( y1 =>
+      inner6( y1 ).map( y2 =>
+        outer6( y2 ).map( y3 =>
+          y3
+        )
+      )
+    )
+
+    val result3 = Writer6( x ).flatMap( y1 =>
+      inner6( y1 ).flatMap( y2 =>
+        outer6( y2 ).map( y3 =>
+          y3
+        )
+      )
+    )
   }
 
 }
