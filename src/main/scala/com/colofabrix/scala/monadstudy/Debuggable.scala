@@ -24,15 +24,9 @@ object Debuggable {
    * return the log as output parameter of the function. The caller will
    * manage this return value.
    */
-  def outer2( x: Double ): ( Double, String ) = Tuple2(
-    Math.log( x ),
-    s"Called outer2($x)"
-  )
+  def outer2( x: Double ): ( Double, String ) = ( Math.log( x ), s"Called outer2($x)" )
 
-  def inner2( x: Double ): ( Double, String ) = Tuple2(
-    Math.exp( x ),
-    s"Called inner2($x)"
-  )
+  def inner2( x: Double ): ( Double, String ) = ( Math.exp( x ), s"Called inner2($x)" )
 
   def example2( x: Double ): Unit = {
     val ( y1, msg1 ) = inner2( x )
@@ -52,15 +46,9 @@ object Debuggable {
    * caller should only use it, so I create a new plumbing function that
    * does the work for me.
    */
-  def outer3( x: Double ): ( Double, String ) = Tuple2(
-    Math.log( x ),
-    s"Called outer3($x)"
-  )
+  def outer3( x: Double ): ( Double, String ) = ( Math.log( x ), s"Called outer3($x)" )
 
-  def inner3( x: Double ): ( Double, String ) = Tuple2(
-    Math.exp( x ),
-    s"Called inner3($x)"
-  )
+  def inner3( x: Double ): ( Double, String ) = ( Math.exp( x ), s"Called inner3($x)" )
 
   def bind3( f: Double => ( Double, String ) )( x: ( Double, String ) ): ( Double, String ) = {
     f( x._1 ) match {
@@ -89,15 +77,9 @@ object Debuggable {
    */
   type Writer4 = ( Double, String )
 
-  def outer4( x: Double ): Writer4 = Tuple2(
-    Math.log( x ),
-    s"Called outer4($x)"
-  )
+  def outer4( x: Double ): Writer4 = ( Math.log( x ), s"Called outer4($x)" )
 
-  def inner4( x: Double ): Writer4 = Tuple2(
-    Math.exp( x ),
-    s"Called inner4($x)"
-  )
+  def inner4( x: Double ): Writer4 = ( Math.exp( x ), s"Called inner4($x)" )
 
   def bind4( f: Double => Writer4 )( x: Writer4 ): Writer4 = {
     f( x._1 ) match {
@@ -133,15 +115,9 @@ object Debuggable {
     }
   }
 
-  def outer5( x: Double ) = Writer5(
-    Math.log( x ),
-    s"Called outer5($x)"
-  )
+  def outer5( x: Double ) = Writer5( Math.log( x ), s"Called outer5($x)" )
 
-  def inner5( x: Double ) = Writer5(
-    Math.exp( x ),
-    s"Called inner5($x)"
-  )
+  def inner5( x: Double ) = Writer5( Math.exp( x ), s"Called inner5($x)" )
 
   def example5( x: Double ): Unit = {
     val result = Writer5( x )
@@ -167,15 +143,9 @@ object Debuggable {
     def map( f: Double => Double ): Double = f( x )
   }
 
-  def outer6( x: Double ) = Writer6(
-    Math.log( x ),
-    s"Called outer6($x)"
-  )
+  def outer6( x: Double ) = Writer6( Math.log( x ), s"Called outer6($x)" )
 
-  def inner6( x: Double ) = Writer6(
-    Math.exp( x ),
-    s"Called inner6($x)"
-  )
+  def inner6( x: Double ) = Writer6( Math.exp( x ), s"Called inner6($x)" )
 
   def example6( x: Double ): Unit = {
     val result = Writer6( x ).flatMap { y1 =>
@@ -183,6 +153,26 @@ object Debuggable {
         outer6(y2)
       }
     }
+
+    val result2 = for {
+      y1 <- Writer6(x)
+    } yield {
+      for {
+        y2 <- inner6( y1 )
+      } yield {
+        for {
+          y3 <- outer6( y2 )
+        } yield y3
+      }
+    }
+    println( result2 )
+
+//    val result3 = for {
+//      y1 <- Writer6(x)
+//      y2 <- inner6( y1 )
+//      y3 <- outer6( y2 )
+//    } yield y3
+//    println( result3 )
 
     println( "EXAMPLE #6 - Scala idiomatic monads" )
     println( s"Input:  $x" )
