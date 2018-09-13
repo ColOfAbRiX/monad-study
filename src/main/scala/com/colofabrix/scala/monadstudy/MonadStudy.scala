@@ -16,6 +16,7 @@ object MonadStudy {
     Debuggable.example3(number)
     Debuggable.example4(number)
     Debuggable.example5(number)
+    Debuggable.example6(number)
   }
 
 }

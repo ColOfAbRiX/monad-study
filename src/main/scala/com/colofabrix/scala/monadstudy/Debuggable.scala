@@ -3,179 +3,192 @@ package com.colofabrix.scala.monadstudy
 object Debuggable {
 
   /**
+   * EXAMPLE #1
    * Normal functions composition: calling one function and passing its
    * result to another one.
-    */
-  def outer1( x: Double ): Double = 2.0 * Math.pow( x, 2.0 ) - 5.0
-  def inner1( x: Double ): Double = -Math.pow( x, 3.0 ) - 2.0 * Math.pow( x, 2.0 ) + 4.0
+   */
+  def outer1( x: Double ): Double = Math.log( x )
+  def inner1( x: Double ): Double = Math.exp( x )
   def example1( x: Double ): Unit = {
     val y = outer1( inner1( x ) )
 
     println( "EXAMPLE #1 - Normal functions composition" )
+    println( s"Input:  $x" )
     println( s"Result: $y" )
     println( "" )
   }
 
   /**
+   * EXAMPLE #2
    * Adding some FP-style debugging: I can't have any side effect so I must
    * return the log as output parameter of the function. The caller will
    * manage this return value.
-    */
-  def outer2( x: Double ): (Double, String) = Tuple2(
-    2.0 * Math.pow( x, 2.0 ) - 5.0,
+   */
+  def outer2( x: Double ): ( Double, String ) = Tuple2(
+    Math.log( x ),
     s"Called outer2($x)"
   )
 
-  def inner2( x: Double ): (Double, String) = Tuple2(
-    -Math.pow( x, 3.0 ) - 2.0 * Math.pow( x, 2.0 ) + 4.0,
+  def inner2( x: Double ): ( Double, String ) = Tuple2(
+    Math.exp( x ),
     s"Called inner2($x)"
   )
 
   def example2( x: Double ): Unit = {
-    val (y1, msg1) = inner2( x )
-    val (y, msg2) = outer2( y1 )
+    val ( y1, msg1 ) = inner2( x )
+    val ( y, msg2 ) = outer2( y1 )
     val msg = msg1 + "\n  " + msg2
 
     println( "EXAMPLE #2 - Adding some FP-style debugging" )
+    println( s"Input:  $x" )
     println( s"Result: $y" )
     println( s"Log:\n  $msg" )
     println( "" )
   }
 
   /**
+   * EXAMPLE #3
    * Adding a plumbing function: I don't want the caller to manage it, the
    * caller should only use it, so I create a new plumbing function that
    * does the work for me.
-    */
-  def outer3( x: Double ): (Double, String) = Tuple2(
-    2.0 * Math.pow( x, 2.0 ) - 5.0,
+   */
+  def outer3( x: Double ): ( Double, String ) = Tuple2(
+    Math.log( x ),
     s"Called outer3($x)"
   )
 
-  def inner3( x: Double ): (Double, String) = Tuple2(
-    -Math.pow( x, 3.0 ) - 2.0 * Math.pow( x, 2.0 ) + 4.0,
+  def inner3( x: Double ): ( Double, String ) = Tuple2(
+    Math.exp( x ),
     s"Called inner3($x)"
   )
 
-  def bind3( x: (Double, String) )( f: Double => (Double, String) ): (Double, String) = {
+  def bind3( f: Double => ( Double, String ) )( x: ( Double, String ) ): ( Double, String ) = {
     f( x._1 ) match {
-      case ( fx, msg ) => (fx, x._2 + "\n  " + msg)
+      case ( fx, msg ) => ( fx, x._2 + "\n  " + msg )
     }
   }
 
-  def unit3( x: Double ): (Double, String) = (x, "  Beginning of log")
+  def unit3( x: Double ): ( Double, String ) = ( x, "  Beginning of log")
 
-  def example3( n: Double ): Unit = {
-    val result = bind3(
-      bind3( unit3( n ) )( inner3 )
-    )( outer3 )
+  def example3( x: Double ): Unit = {
+    val result = bind3( outer3 )(
+      bind3( inner3 )( unit3( x ) )
+    )
 
     println( "EXAMPLE #3 - Adding a plumbing function" )
+    println( s"Input:  $x" )
     println( s"Result: ${result._1}" )
     println( s"Log: \n${result._2}" )
     println( "" )
   }
 
   /**
-    * Renaming and cleaning: use better names and explicit the output data
-    * structure.
-    */
-  type Writer4 = (Double, String)
+   * EXAMPLE #4
+   * Renaming and cleaning: use better names, use currying and explicit the
+   * output data structures.
+   */
+  type Writer4 = ( Double, String )
 
   def outer4( x: Double ): Writer4 = Tuple2(
-    2.0 * Math.pow( x, 2.0 ) - 5.0,
+    Math.log( x ),
     s"Called outer4($x)"
   )
 
   def inner4( x: Double ): Writer4 = Tuple2(
-    -Math.pow( x, 3.0 ) - 2.0 * Math.pow( x, 2.0 ) + 4.0,
+    Math.exp( x ),
     s"Called inner4($x)"
   )
 
-  def bind4( x: Writer4 )( f: Double => Writer4 ): Writer4 = {
+  def bind4( f: Double => Writer4 )( x: Writer4 ): Writer4 = {
     f( x._1 ) match {
-      case ( fx, msg ) => (fx, x._2 + "\n  " + msg)
+      case ( fx, msg ) => ( fx, x._2 + "\n  " + msg )
     }
   }
 
-  def unit4( x: Double ): Writer4 = (x, "  Beginning of log")
+  def unit4( x: Double ): Writer4 = ( x, "  Beginning of log")
 
-  def example4( n: Double ): Unit = {
-    val result = bind4(
-      bind4( unit4( n ) )( inner4 )
-    )( outer4 )
+  def example4( x: Double ): Unit = {
+    val outer = bind4( outer4 )( _ )
+    val inner = bind4( inner4 )( _ )
+    val result = outer( inner( unit4( x ) ) )
 
     println( "EXAMPLE #4 - Renaming and cleaning" )
+    println( s"Input:  $x" )
     println( s"Result: ${result._1}" )
     println( s"Log: \n${result._2}" )
     println( "" )
   }
 
   /**
+   * EXAMPLE #5
    * Explicit Writer monad: create a class that incorporate the generic
    * functionalities developed in the previous example and that makes its
    * usage more comfortable.
-    */
-  case class Writer5(x: Double, log: String = "") {
+   */
+  case class Writer5( x: Double, log: String = "  Beginning of log") {
     def bind( f: Double => Writer5 ): Writer5 = {
       f( x ) match {
-        case Writer5( fx, msg ) => Writer5(fx, log + "\n  " + msg)
+        case Writer5( fx, msg ) => Writer5( fx, log + "\n  " + msg )
       }
     }
   }
 
   def outer5( x: Double ) = Writer5(
-    2.0 * Math.pow( x, 2.0 ) - 5.0,
+    Math.log( x ),
     s"Called outer5($x)"
   )
 
   def inner5( x: Double ) = Writer5(
-    -Math.pow( x, 3.0 ) - 2.0 * Math.pow( x, 2.0 ) + 4.0,
+    Math.exp( x ),
     s"Called inner5($x)"
   )
 
-  def example5( n: Double ): Unit = {
-    val result = Writer5( n )
+  def example5( x: Double ): Unit = {
+    val result = Writer5( x )
       .bind( inner5 )
       .bind( outer5 )
 
     println( "EXAMPLE #5 - Explicit Writer monad" )
+    println( s"Input:  $x" )
     println( s"Result: ${result.x}" )
     println( s"Log: \n${result.log}" )
     println( "" )
   }
 
   /**
-    * Scala idiomatic way of monads
-    */
-  case class Writer6(x: Double, log: String = "") {
-    def outerp( f: Double => Writer6 ): Writer6 = f( x ) match {
-      case Writer6( fx, msg ) => Writer6(fx, log + "\n  " + msg)
+   * EXAMPLE #6
+   * Scala idiomatic way of monads: Scala allows to use a special syntax with
+   * a for-expression to work with monads in a nicer way.
+   */
+  case class Writer6( x: Double, log: String = "  Beginning of log") {
+    def flatMap( f: Double => Writer6 ): Writer6 = f( x ) match {
+      case Writer6( fx, msg ) => Writer6( fx, log + "\n  " + msg )
     }
-    def map( f: Double => Double ) = f( x )
+    def map( f: Double => Double ): Double = f( x )
   }
 
   def outer6( x: Double ) = Writer6(
-    2.0 * Math.pow( x, 2.0 ) - 6.0,
+    Math.log( x ),
     s"Called outer6($x)"
   )
 
   def inner6( x: Double ) = Writer6(
-    -Math.pow( x, 3.0 ) - 2.0 * Math.pow( x, 2.0 ) + 4.0,
+    Math.exp( x ),
     s"Called inner6($x)"
   )
 
-  // def example6( n: Double ): Unit = {
-  //   val result = for {
-  //     n <- Writer6(4)
-  //     y1 <- inner6(n)
-  //     y2 <- outer6(y1)
-  //   } yield y2
+  def example6( x: Double ): Unit = {
+    val result = Writer6( x ).flatMap { y1 =>
+      inner6(y1).flatMap { y2 =>
+        outer6(y2)
+      }
+    }
 
-  //   println( "EXAMPLE #6 - Scala idiomatic way of monads" )
-  //   println( s"Result: ${result.x}" )
-  //   println( s"Log: \n${result.log}" )
-  //   println( "" )
-  // }
+    println( "EXAMPLE #6 - Scala idiomatic monads" )
+    println( s"Input:  $x" )
+    println( s"Result: ${result.x}" )
+    println( s"Log: \n${result.log}" )
+    println( "" )
+  }
 
 }
