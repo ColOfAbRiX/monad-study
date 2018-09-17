@@ -107,12 +107,15 @@ object Debuggable {
    * functionalities developed in the previous example and that makes its
    * usage more comfortable.
    */
-  case class Writer5( x: Double, log: String = "  Beginning of log") {
+  case class Writer5 private ( x: Double, log: String ) {
     def bind( f: Double => Writer5 ): Writer5 = {
       f( x ) match {
         case Writer5( fx, msg ) => Writer5( fx, log + "\n  " + msg )
       }
     }
+  }
+  object Writer5 {
+    def apply( x: Double, log: String = "  Beginning of log" ): Writer5 = new Writer5( x, log )
   }
 
   def outer5( x: Double ) = Writer5( Math.log( x ), s"Called outer5($x)" )
@@ -136,11 +139,11 @@ object Debuggable {
    * Scala idiomatic way of monads: Scala allows to use a special syntax with
    * a for-expression to work with monads in a nicer way.
    */
-  case class Writer6( x: Double, log: String = "  Beginning of log") {
+  case class Writer6( x: Double, log: String = "  Beginning of log" ) {
     def flatMap( f: Double => Writer6 ): Writer6 = f( x ) match {
       case Writer6( fx, msg ) => Writer6( fx, log + "\n  " + msg )
     }
-    def map( f: Double => Double ): Double = f( x )
+    def map( f: Double => Double ): Writer6 = Writer6( f( x ), log )
   }
 
   def outer6( x: Double ) = Writer6( Math.log( x ), s"Called outer6($x)" )
@@ -148,34 +151,11 @@ object Debuggable {
   def inner6( x: Double ) = Writer6( Math.exp( x ), s"Called inner6($x)" )
 
   def example6( x: Double ): Unit = {
-    // THIS WORKS
-    val result = Writer6( x ).flatMap { y1 =>
-      inner6(y1).flatMap { y2 =>
-        outer6(y2)
-      }
-    }
-
-    // THIS WORKS
-    val result2 = for {
-      y1 <- Writer6(x)
-    } yield {
-      for {
-        y2 <- inner6( y1 )
-      } yield {
-        for {
-          y3 <- outer6( y2 )
-        } yield y3
-      }
-    }
-    println( result2 )
-
-    // THIS DOESN'T WORK
-    val result3 = for {
-      y1 <- Writer6(x)
+    val result = for {
+      y1 <- Writer6( x )
       y2 <- inner6( y1 )
       y3 <- outer6( y2 )
     } yield y3
-    println( result3 )
 
     println( "EXAMPLE #6 - Scala idiomatic monads" )
     println( s"Input:  $x" )
@@ -183,25 +163,4 @@ object Debuggable {
     println( s"Log: \n${result.log}" )
     println( "" )
   }
-
-  def desugaring(): Unit = {
-    val x = 1.23
-
-    val result2 = Writer6( x ).map( y1 =>
-      inner6( y1 ).map( y2 =>
-        outer6( y2 ).map( y3 =>
-          y3
-        )
-      )
-    )
-
-    val result3 = Writer6( x ).flatMap( y1 =>
-      inner6( y1 ).flatMap( y2 =>
-        outer6( y2 ).map( y3 =>
-          y3
-        )
-      )
-    )
-  }
-
 }
