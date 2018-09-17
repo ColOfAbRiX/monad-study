@@ -7,6 +7,16 @@ package com.colofabrix.scala.monadstudy
 
 object MonadStudy {
 
+  case class Complex( r: Double, t: Double ) {
+    private def deMoivreRoots( root: Int ) = Seq.tabulate( root ) { n =>
+      Complex( Math.sqrt( r ) * Math.cos( (t + n * 2 * Math.PI) / root ), Math.sqrt( r ) * Math.sin( (t + n * 2 * Math.PI) / root ) )
+    }
+
+    def sqrt(): Seq[Complex] = deMoivreRoots( 2 )
+
+    def cbrt(): Seq[Complex] = deMoivreRoots( 3 )
+  }
+
   def main(args: Array[String]): Unit = {
     val number = new java.util.Random().nextDouble()
     println(s"\nNUMBER: $number\n")
