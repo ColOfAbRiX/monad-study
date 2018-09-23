@@ -1,19 +1,50 @@
 package com.colofabrix.scala.monadstudy
 
+import scala.util.Random
+
 object Randomised {
 
   /**
     * EXAMPLE #1
-    * Normal functions composition: calling one function and passing its result
-    * to another one.
+    * Imperative style state: using a mutable variable to hold a state, updating
+    * it and passing it around.
     */
+  def random1( seed: Int ): Double = new Random( seed ).nextDouble()
+
+  def example1( x: Int ): Unit = {
+    var seed = x
+    val r1 = random1( seed )
+
+    seed = (r1 * Int.MaxValue).toInt
+    val r2 = random1( seed )
+
+    println( "EXAMPLE #1 - Imperative style state" )
+    println( s"Random #1: $r1" )
+    println( s"Random #2: $r2" )
+    println( "" )
+  }
 
   /**
     * EXAMPLE #2
-    * Adding some FP-style debugging: I can't have any side effect so I must
+    * Adding FP-style state: I can't have any side effect so I must
     * return the log as output parameter of the function. The caller will
     * manage this return value.
     */
+
+  def random2( seed: Int ): (Int, Double) = Tuple2(
+    new Random( seed ).nextInt(),
+    new Random( seed ).nextDouble()
+  )
+
+  def example2( x: Int ): Unit = {
+    val r1 = random2( x )
+    val r2 = random2( r1._1 )
+
+    println( "EXAMPLE #1 - Normal functions composition" )
+    println( s"Random #1: ${r1._2}" )
+    println( s"Random #2: ${r2._2}" )
+    println( "" )
+  }
 
   /**
     * EXAMPLE #3

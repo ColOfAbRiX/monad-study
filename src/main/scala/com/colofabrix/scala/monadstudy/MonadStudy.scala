@@ -10,27 +10,33 @@ import com.colofabrix.scala.monadstudy.Multivalued.Complex
 object MonadStudy {
 
   def main( args: Array[String] ): Unit = {
-    val number = new java.util.Random().nextDouble()
-    println( s"\nNUMBER: $number\n" )
 
     println( "\n ~ Debuggable ~ \n" )
+    val dblNumber = new scala.util.Random().nextDouble()
 
-    Debuggable.example1( number )
-    Debuggable.example2( number )
-    Debuggable.example3( number )
-    Debuggable.example4( number )
-    Debuggable.example5( number )
-    Debuggable.example6( number )
-    Debuggable.example7( number )
+    Debuggable.example1( dblNumber )
+    Debuggable.example2( dblNumber )
+    Debuggable.example3( dblNumber )
+    Debuggable.example4( dblNumber )
+    Debuggable.example5( dblNumber )
+    Debuggable.example6( dblNumber )
+    Debuggable.example7( dblNumber )
 
     println( "\n ~ Multivalued ~ \n" )
+    val cmplxNumber = Complex( 4, 0 )
 
-    Multivalued.example1( Complex( 4, 0 ) )
-    Multivalued.example2( Complex( 4, 0 ) )
-    Multivalued.example3( Complex( 4, 0 ) )
-    Multivalued.example4( Complex( 4, 0 ) )
-    Multivalued.example5( Complex( 4, 0 ) )
-    Multivalued.example6( Complex( 4, 0 ) )
+    Multivalued.example1( cmplxNumber )
+    Multivalued.example2( cmplxNumber )
+    Multivalued.example3( cmplxNumber )
+    Multivalued.example4( cmplxNumber )
+    Multivalued.example5( cmplxNumber )
+    Multivalued.example6( cmplxNumber )
+
+    println( "\n ~ Randomized ~ \n" )
+    val intNumber = new java.util.Random().nextInt()
+
+    Randomised.example1( intNumber )
+    Randomised.example1( intNumber )
   }
 
 }
