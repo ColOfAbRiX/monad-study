@@ -40,7 +40,7 @@ object Randomised {
     val r1 = random2( x )
     val r2 = random2( r1._1 )
 
-    println( "EXAMPLE #1 - Normal functions composition" )
+    println( "EXAMPLE #2 - Adding FP-style state" )
     println( s"Random #1: ${r1._2}" )
     println( s"Random #2: ${r2._2}" )
     println( "" )
@@ -52,6 +52,28 @@ object Randomised {
     * of the functions, it should only use them, so I create a new plumbing
     * function that does exactly that, it binds together function calls.
     */
+
+  def random3( seed: Int ): (Int, Double) = Tuple2(
+    new Random( seed ).nextInt(),
+    new Random( seed ).nextDouble()
+  )
+
+  def bind3( f: Int => (Int, Double) )( s: (Int, Double) ): (Int, Double) = ???
+
+  def unit3( s: Int ): (Int, Double) = Tuple2(s, new Random( s ).nextDouble() )
+
+  def example3( x: Int ): Unit = {
+    val result = bind3( random3 )(
+      bind3( random3 )(
+        unit3(x)
+      )
+    )
+
+    println( "EXAMPLE #3 - Adding a plumbing function" )
+    println( s"Random #1: ${result._2}" )
+    println( s"Random #2: ${result._2}" )
+    println( "" )
+  }
 
   /**
     * EXAMPLE #4
