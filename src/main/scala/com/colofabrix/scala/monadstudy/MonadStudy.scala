@@ -3,8 +3,10 @@ package com.colofabrix.scala.monadstudy
 import com.colofabrix.scala.monadstudy.Multivalued.Complex
 
 /**
-  * Some practice with the topics explained in the article
-  * http://blog.sigfpe.com/2006/08/you-could-have-invented-monads-and.html
+  * Some practice with the topics explained in the article:
+  *   http://blog.sigfpe.com/2006/08/you-could-have-invented-monads-and.html
+  * These exercises are aimed at understanding how monads got developed and the
+  * concepts that lie underneath them.
   */
 
 object MonadStudy {
@@ -37,7 +39,8 @@ object MonadStudy {
 
     Randomised.example1( intNumber )
     Randomised.example2( intNumber )
-    Randomised.example3( intNumber )
+    Randomised.example3a( intNumber )
+    Randomised.example3b( intNumber )
 //    Randomised.example4( intNumber )
 //    Randomised.example5( intNumber )
 //    Randomised.example6( intNumber )

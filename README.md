@@ -2,6 +2,8 @@
 
 Some practice with the topics explained in the article [You Could Have Invented Monads!](1)
 
+These exercises are aimed at understanding how monads got developed and the concepts that lie underneath them.
+  
 Following the page, here are developed 3 monads:
 
 - Writer
