@@ -12,15 +12,21 @@ object Randomised {
   def random1( seed: Int ): Double = new Random( seed ).nextDouble()
 
   def example1( x: Int ): Unit = {
-    val r1 = random1( x )
     var seed = x
 
-    val r2 = random1( seed )
-    seed = (r2 * Int.MaxValue).toInt
+    // First random number and seed update
+    val n1 = random1( seed )
+    seed = (n1 * Int.MaxValue).toInt
+
+    // Second random number and seed update
+    val n2 = random1( seed )
+    seed = (n2 * Int.MaxValue).toInt
+
+    // Compute result
+    val result = (n1 + n2) / 2.0
 
     println( "EXAMPLE #1 - Imperative style state" )
-    println( s"Random #1: $r1" )
-    println( s"Random #2: $r2" )
+    println( s"Result: $result" )
     println( "" )
   }
 
@@ -37,12 +43,16 @@ object Randomised {
   }
 
   def example2( x: Int ): Unit = {
-    val r1 = random2( x )
-    val r2 = random2( r1._1 )
+    // First random number, new seed computed automatically
+    val n1 = random2( x )
+    // Second random number, new seed computed automatically
+    val n2 = random2( n1._1 )
+
+    // Compute result
+    val result = (n1._2 + n2._2) / 2.0
 
     println( "EXAMPLE #2 - Adding FP-style state" )
-    println( s"Random #1: ${r1._2}" )
-    println( s"Random #2: ${r2._2}" )
+    println( s"Result: $result" )
     println( "" )
   }
 
@@ -59,12 +69,16 @@ object Randomised {
   }
 
   def example3a( x: Int ): Unit = {
-    val r1 = random3a()( x )
-    val r2 = random3a()( r1._1 )
+    // First random number, new seed computed automatically
+    val n1 = random3a()( x )
+    // Second random number, new seed computed automatically
+    val n2 = random3a()( n1._1 )
+
+    // Compute result
+    val result = (n1._2 + n2._2) / 2.0
 
     println( "EXAMPLE #3a - Introducing the concept of Action" )
-    println( s"Random #1: ${r1._2}" )
-    println( s"Random #2: ${r2._2}" )
+    println( s"Result: $result" )
     println( "" )
   }
 
@@ -80,23 +94,26 @@ object Randomised {
     (newSeed, newRandom)
   }
 
-  def bind3b( s: Double => Int => (Int, Double) )( f: Int => (Int, Double) ): Int => (Int, Double) = { seed =>
+  def bind3b( g: Double => Int => (Int, Double) )( f: Int => (Int, Double) ): Int => (Int, Double) = { seed =>
     val (newSeed, newRandom) = f(seed)
-    s(newRandom)(newSeed)
+    g(newRandom)(newSeed)
   }
 
   def unit3b( a: Double ): Int => (Int, Double) = { seed => (seed, a) }
 
   def example3b( x: Int ): Unit = {
-    val result = bind3b( random3b )(
-      bind3b( random3b )(
-        unit3b(x)
-      )
-    )
+    // Create a computation that will calculate the result
+    val computation = bind3b { n1 =>
+      bind3b { n2 =>
+        unit3b((n1 + n2) / 2.0)
+      }( random3b() )
+    }( random3b() )
+
+    // Compute the result
+    val result = computation(x)
 
     println( "EXAMPLE #3 - Adding a plumbing function" )
-    println( s"Random #1: ${result._2}" )
-    println( s"Random #2: ${result._2}" )
+    println( s"Result: ${result._2}" )
     println( "" )
   }
 

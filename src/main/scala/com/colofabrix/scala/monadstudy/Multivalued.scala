@@ -153,21 +153,21 @@ object Multivalued {
     * Introduce generics: use generic types for the List (MyList) monad so that
     * it can be used in different contexts and with more than just logs
     */
-  case class MyList[A] private ( xs: Seq[A] ) {
-    def flatMap[B]( f: A => MyList[B] ): MyList[B] = MyList( xs.flatMap( f( _ ).xs ) )
-    def map[B]( f: A => B ): MyList[B] = MyList( xs.map(f) )
+  case class List[A] private ( xs: Seq[A] ) {
+    def flatMap[B]( f: A => List[B] ): List[B] = List( xs.flatMap( f( _ ).xs ) )
+    def map[B]( f: A => B ): List[B] = List( xs.map(f) )
   }
-  object MyList {
-    def apply[A]( c: A ): MyList[A] = new MyList( Seq(c) )
+  object List {
+    def apply[A]( c: A ): List[A] = new List( Seq(c) )
   }
 
-  def sqrt6( c: Complex ): MyList[Complex] = MyList( deMoivreRoots( c, 2 ) )
+  def sqrt6( c: Complex ): List[Complex] = List( deMoivreRoots( c, 2 ) )
 
-  def cbrt6( c: Complex ): MyList[Complex] = MyList( deMoivreRoots( c, 3 ) )
+  def cbrt6( c: Complex ): List[Complex] = List( deMoivreRoots( c, 3 ) )
 
   def example6( x: Complex ): Unit = {
     val result = for {
-      y1 <- MyList( x )
+      y1 <- List( x )
       y2 <- sqrt6( y1 )
       y3 <- cbrt6( y2 )
     } yield y3
