@@ -57,89 +57,154 @@ object Randomised {
   }
 
   /**
-    * EXAMPLE #3a
+    * EXAMPLE #3
     * Introducing the concept of Action. Instead of working with input and output values I
     * work with functions that perform the requested operations. I can think of
     * returning an "action" that will perform what I need.
     */
-  def random3a(): Int => (Int, Double) = { seed =>
+  def random3(): Int => (Int, Double) = { seed =>
     val newRandom = new Random( seed ).nextDouble()
     val newSeed = (newRandom * Int.MaxValue).toInt
     (newSeed, newRandom)
   }
 
-  def example3a( x: Int ): Unit = {
+  def example3( x: Int ): Unit = {
     // First random number, new seed computed automatically
-    val n1 = random3a()( x )
+    val n1 = random3()( x )
     // Second random number, new seed computed automatically
-    val n2 = random3a()( n1._1 )
+    val n2 = random3()( n1._1 )
 
     // Compute result
     val result = (n1._2 + n2._2) / 2.0
 
-    println( "EXAMPLE #3a - Introducing the concept of Action" )
+    println( "EXAMPLE #3 - Introducing the concept of Action" )
     println( s"Result: $result" )
     println( "" )
   }
 
   /**
-    * EXAMPLE #3b
+    * EXAMPLE #4
     * Adding a plumbing function: I don't want the caller to manage the binding
     * of the functions, it should only use them, so I create a new plumbing
     * function that does exactly that, it binds together function calls.
     */
-  def random3b(): Int => (Int, Double) = { seed =>
+  def random4(): Int => (Int, Double) = { seed =>
     val newRandom = new Random( seed ).nextDouble()
     val newSeed = (newRandom * Int.MaxValue).toInt
     (newSeed, newRandom)
   }
 
-  def bind3b( g: Double => Int => (Int, Double) )( f: Int => (Int, Double) ): Int => (Int, Double) = { seed =>
+  def bind4( g: Double => Int => (Int, Double) )( f: Int => (Int, Double) ): Int => (Int, Double) = { seed =>
     val (newSeed, newRandom) = f(seed)
     g(newRandom)(newSeed)
   }
 
-  def unit3b( a: Double ): Int => (Int, Double) = { seed => (seed, a) }
+  def unit4( a: Double ): Int => (Int, Double) = { seed => (seed, a) }
 
-  def example3b( x: Int ): Unit = {
+  def example4( x: Int ): Unit = {
     // Create a computation that will calculate the result
-    val computation = bind3b { n1 =>
-      bind3b { n2 =>
-        unit3b((n1 + n2) / 2.0)
-      }( random3b() )
-    }( random3b() )
+    val computation = bind4 { n1 =>
+      bind4 { n2 =>
+        unit4((n1 + n2) / 2.0)
+      }( random4() )
+    }( random4() )
 
     // Compute the result
     val result = computation(x)
 
-    println( "EXAMPLE #3 - Adding a plumbing function" )
+    println( "EXAMPLE #4 - Adding a plumbing function" )
     println( s"Result: ${result._2}" )
     println( "" )
   }
 
   /**
-    * EXAMPLE #4
+    * EXAMPLE #5
     * Renaming and cleaning: use better names, use currying and explicit the
     * output data structures so that it becomes more practical to use the
     * binding function.
     */
+  type RNG5 = Int => (Int, Double)
 
-  /**
-    * EXAMPLE #5
-    * Explicit Writer monad: create a class that incorporates the generic
-    * functionalities developed in the previous example and that makes the
-    * usage of these functionalities even more practical.
-    */
+  def random5(): RNG5 = { seed =>
+    val newRandom = new Random( seed ).nextDouble()
+    val newSeed = (newRandom * Int.MaxValue).toInt
+    (newSeed, newRandom)
+  }
+
+  def bind5( g: Double => RNG5 )( f: RNG5 ): RNG5 = { seed =>
+    val (newSeed, newRandom) = f(seed)
+    g(newRandom)(newSeed)
+  }
+
+  def unit5( a: Double ): RNG5 = { seed => (seed, a) }
+
+  def example5( x: Int ): Unit = {
+    // Create a computation that will calculate the result
+    val computation = bind4 { n1 =>
+      bind4 { n2 =>
+        unit4((n1 + n2) / 2.0)
+      }( random4() )
+    }( random4() )
+
+    // Compute the result
+    val result = computation(x)
+
+    println( "EXAMPLE #5 - Renaming and cleaning" )
+    println( s"Result: ${result._2}" )
+    println( "" )
+  }
 
   /**
     * EXAMPLE #6
+    * Explicit State monad: create a class that incorporates the generic
+    * functionalities developed in the previous example and that makes the
+    * usage of these functionalities even more practical.
+    */
+  import State6._
+
+  class State6( f: RNG6 ) {
+    def bind( g: Double => RNG6 ): RNG6 = { seed =>
+      val (newSeed, newRandom) = f(seed)
+      g(newRandom)(newSeed)
+    }
+  }
+
+  object State6 {
+    type RNG6 = Int => (Int, Double)
+    def apply( a: Double ): RNG6 = { seed => (seed, a) }
+    def apply( f: RNG6 ): State6 = new State6( f )
+  }
+
+  def random6(): RNG6 = { seed =>
+    val newRandom = new Random( seed ).nextDouble()
+    val newSeed = (newRandom * Int.MaxValue).toInt
+    (newSeed, newRandom)
+  }
+
+  def example6( x: Int ): Unit = {
+    val computation = State6( random6() ).bind { n1 =>
+      State6( random6() ).bind { n2 =>
+        State6( (n1 + n2) / 2.0 )
+      }
+    }
+
+    // Compute the result
+    val result = computation(x)
+
+    println( "EXAMPLE #6 - Explicit State monad" )
+    println( s"Result: ${result._2}" )
+    println( "" )
+  }
+
+  /**
+    * EXAMPLE #7
     * Scala idiomatic way of monads: Scala allows to use a special syntax with
     * a for-expression to work with monads in a nicer way. And usability is
     * improved even more.
     */
 
   /**
-    * EXAMPLE #7
+    * EXAMPLE #8
     * Introduce generics: use generic types for the Writer monad so that it can
     * be used in different contexts and with more than just logs
     */

@@ -39,11 +39,10 @@ object MonadStudy {
 
     Randomised.example1( intNumber )
     Randomised.example2( intNumber )
-    Randomised.example3a( intNumber )
-    Randomised.example3b( intNumber )
-//    Randomised.example4( intNumber )
-//    Randomised.example5( intNumber )
-//    Randomised.example6( intNumber )
+    Randomised.example3( intNumber )
+    Randomised.example4( intNumber )
+    Randomised.example5( intNumber )
+    Randomised.example6( intNumber )
 //    Randomised.example7( intNumber )
   }
 
