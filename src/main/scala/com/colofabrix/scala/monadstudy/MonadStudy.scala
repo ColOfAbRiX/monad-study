@@ -43,7 +43,8 @@ object MonadStudy {
     Randomised.example4( intNumber )
     Randomised.example5( intNumber )
     Randomised.example6( intNumber )
-//    Randomised.example7( intNumber )
+    Randomised.example7( intNumber )
+    Randomised.example8( intNumber )
   }
 
 }

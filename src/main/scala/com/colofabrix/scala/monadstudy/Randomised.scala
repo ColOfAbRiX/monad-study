@@ -39,7 +39,7 @@ object Randomised {
   def random2( seed: Int ): (Int, Double) = {
     val newRandom = new Random( seed ).nextDouble()
     val newSeed = (newRandom * Int.MaxValue).toInt
-    (newSeed, newRandom)
+    ( newSeed, newRandom )
   }
 
   def example2( x: Int ): Unit = {
@@ -65,7 +65,7 @@ object Randomised {
   def random3(): Int => (Int, Double) = { seed =>
     val newRandom = new Random( seed ).nextDouble()
     val newSeed = (newRandom * Int.MaxValue).toInt
-    (newSeed, newRandom)
+    ( newSeed, newRandom )
   }
 
   def example3( x: Int ): Unit = {
@@ -91,11 +91,11 @@ object Randomised {
   def random4(): Int => (Int, Double) = { seed =>
     val newRandom = new Random( seed ).nextDouble()
     val newSeed = (newRandom * Int.MaxValue).toInt
-    (newSeed, newRandom)
+    ( newSeed, newRandom )
   }
 
   def bind4( g: Double => Int => (Int, Double) )( f: Int => (Int, Double) ): Int => (Int, Double) = { seed =>
-    val (newSeed, newRandom) = f(seed)
+    val (newSeed, newRandom) = f( seed )
     g(newRandom)(newSeed)
   }
 
@@ -110,7 +110,7 @@ object Randomised {
     }( random4() )
 
     // Compute the result
-    val result = computation(x)
+    val result = computation( x )
 
     println( "EXAMPLE #4 - Adding a plumbing function" )
     println( s"Result: ${result._2}" )
@@ -128,12 +128,12 @@ object Randomised {
   def random5(): RNG5 = { seed =>
     val newRandom = new Random( seed ).nextDouble()
     val newSeed = (newRandom * Int.MaxValue).toInt
-    (newSeed, newRandom)
+    ( newSeed, newRandom )
   }
 
   def bind5( g: Double => RNG5 )( f: RNG5 ): RNG5 = { seed =>
-    val (newSeed, newRandom) = f(seed)
-    g(newRandom)(newSeed)
+    val (newSeed, newRandom) = f( seed )
+    g( newRandom )( newSeed )
   }
 
   def unit5( a: Double ): RNG5 = { seed => (seed, a) }
@@ -147,7 +147,7 @@ object Randomised {
     }( random4() )
 
     // Compute the result
-    val result = computation(x)
+    val result = computation( x )
 
     println( "EXAMPLE #5 - Renaming and cleaning" )
     println( s"Result: ${result._2}" )
@@ -160,36 +160,36 @@ object Randomised {
     * functionalities developed in the previous example and that makes the
     * usage of these functionalities even more practical.
     */
-  import State6._
+  import Randomised6._
 
-  class State6( f: RNG6 ) {
+  class Randomised6( f: RNG6 ) {
     def bind( g: Double => RNG6 ): RNG6 = { seed =>
-      val (newSeed, newRandom) = f(seed)
-      g(newRandom)(newSeed)
+      val (newSeed, newRandom) = f( seed )
+      g( newRandom )( newSeed )
     }
   }
 
-  object State6 {
+  object Randomised6 {
     type RNG6 = Int => (Int, Double)
     def apply( a: Double ): RNG6 = { seed => (seed, a) }
-    def apply( f: RNG6 ): State6 = new State6( f )
+    def apply( f: RNG6 ): Randomised6 = new Randomised6( f )
   }
 
   def random6(): RNG6 = { seed =>
     val newRandom = new Random( seed ).nextDouble()
     val newSeed = (newRandom * Int.MaxValue).toInt
-    (newSeed, newRandom)
+    ( newSeed, newRandom )
   }
 
   def example6( x: Int ): Unit = {
-    val computation = State6( random6() ).bind { n1 =>
-      State6( random6() ).bind { n2 =>
-        State6( (n1 + n2) / 2.0 )
+    val computation = Randomised6( random6() ).bind { n1 =>
+      Randomised6( random6() ).bind { n2 =>
+        Randomised6( (n1 + n2) / 2.0 )
       }
     }
 
     // Compute the result
-    val result = computation(x)
+    val result = computation( x )
 
     println( "EXAMPLE #6 - Explicit State monad" )
     println( s"Result: ${result._2}" )
@@ -202,11 +202,91 @@ object Randomised {
     * a for-expression to work with monads in a nicer way. And usability is
     * improved even more.
     */
+  import Randomised7._
+
+  class Randomised7( f: RNG7 ) {
+    def flatMap( g: Double => RNG7 ): RNG7 = { seed =>
+      val (newSeed, newRandom) = f( seed )
+      g( newRandom )( newSeed )
+    }
+    def map( g: Double => Double ): RNG7 = { seed =>
+      val (newSeed, newRandom) = f( seed )
+      ( newSeed, g(newRandom) )
+    }
+  }
+
+  object Randomised7 {
+    type RNG7 = Int => (Int, Double)
+    def apply( a: Double ): RNG7 = { seed => (seed, a) }
+    def apply( f: RNG7 ): Randomised7 = new Randomised7( f )
+  }
+
+  def random7(): RNG7 = { seed =>
+    val newRandom = new Random( seed ).nextDouble()
+    val newSeed = (newRandom * Int.MaxValue).toInt
+    ( newSeed, newRandom )
+  }
+
+  def example7( x: Int ): Unit = {
+    val computation = for {
+      n1 <- Randomised7(random7())
+      n2 <- Randomised7(random7())
+    } yield {
+      (n1 + n2) / 2.0
+    }
+
+    // Compute the result
+    val result = computation( x )
+
+    println( "EXAMPLE #7 - Explicit State monad" )
+    println( s"Result: ${result._2}" )
+    println( "" )
+  }
 
   /**
     * EXAMPLE #8
     * Introduce generics: use generic types for the Writer monad so that it can
     * be used in different contexts and with more than just logs
     */
+  import State._
+
+  class State[S, A]( f: Action[S, A] ) {
+    def flatMap( g: A => Action[S, A] ): Action[S, A] = { s =>
+      val (ns, x) = f( s )
+      g( x )( ns )
+    }
+    def map( g: A => A ): Action[S, A] = { s =>
+      val (ns, x) = f( s )
+      ( ns, g(x) )
+    }
+  }
+
+  object State {
+    type Action[S, A] = S => (S, A)
+    def apply[S, A]( a: A ): Action[S, A] = { seed => (seed, a) }
+    def apply[S, A]( f: Action[S, A] ): State[S, A] = new State( f )
+  }
+
+  def random8(): Action[Int, Double] = { seed =>
+    val newRandom = new Random( seed ).nextDouble()
+    val newSeed = (newRandom * Int.MaxValue).toInt
+    ( newSeed, newRandom )
+  }
+
+  def example8( x: Int ): Unit = {
+    val computation = for {
+      n1 <- State(random8())
+      n2 <- State(random8())
+    } yield {
+      (n1 + n2) / 2.0
+    }
+
+    // Compute the result
+    val result = computation( x )
+
+    println( "EXAMPLE #8 - Explicit State monad" )
+    println( s"Result: ${result._2}" )
+    println( "" )
+  }
 
 }
