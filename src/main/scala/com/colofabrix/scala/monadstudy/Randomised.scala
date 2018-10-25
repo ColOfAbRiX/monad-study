@@ -250,7 +250,7 @@ object Randomised {
     */
   import State._
 
-  class State[S, A]( f: Action[S, A] ) {
+  case class State[S, A]( f: Action[S, A] ) {
     def flatMap( g: A => Action[S, A] ): Action[S, A] = { s =>
       val (ns, x) = f( s )
       g( x )( ns )

@@ -153,7 +153,7 @@ object Multivalued {
     * Introduce generics: use generic types for the List (MyList) monad so that
     * it can be used in different contexts and with more than just logs
     */
-  case class List[A] private ( xs: Seq[A] ) {
+  case class List[+A] private ( xs: Seq[A] ) {
     def flatMap[B]( f: A => List[B] ): List[B] = List( xs.flatMap( f( _ ).xs ) )
     def map[B]( f: A => B ): List[B] = List( xs.map(f) )
   }
