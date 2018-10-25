@@ -248,9 +248,9 @@ object Randomised {
     * Introduce generics: use generic types for the Writer monad so that it can
     * be used in different contexts and with more than just logs
     */
-  import State._
+  import State8._
 
-  case class State[S, A]( f: Action[S, A] ) {
+  case class State8[S, A]( f: Action[S, A] ) {
     def flatMap( g: A => Action[S, A] ): Action[S, A] = { s =>
       val (ns, x) = f( s )
       g( x )( ns )
@@ -261,10 +261,10 @@ object Randomised {
     }
   }
 
-  object State {
+  object State8 {
     type Action[S, A] = S => (S, A)
     def apply[S, A]( a: A ): Action[S, A] = { seed => (seed, a) }
-    def apply[S, A]( f: Action[S, A] ): State[S, A] = new State( f )
+    def apply[S, A]( f: Action[S, A] ): State8[S, A] = new State8( f )
   }
 
   def random8(): Action[Int, Double] = { seed =>
@@ -275,8 +275,8 @@ object Randomised {
 
   def example8( x: Int ): Unit = {
     val computation = for {
-      n1 <- State(random8())
-      n2 <- State(random8())
+      n1 <- State8(random8())
+      n2 <- State8(random8())
     } yield {
       (n1 + n2) / 2.0
     }
@@ -285,6 +285,44 @@ object Randomised {
     val result = computation( x )
 
     println( "EXAMPLE #8 - Explicit State monad" )
+    println( s"Result: ${result._2}" )
+    println( "" )
+  }
+
+  /**
+    * EXAMPLE #9
+    * Better State monad: this examples polishes the previous one by making the
+    * monad more like the ones seen in libraries.
+    */
+  case class State9[S, A]( run: S => (S, A) ) {
+    def flatMap( f: A => State9[S, A] ): State9[S, A] = State9({ s =>
+      val (ns, x) = run( s )
+      f( x ).run( ns )
+    })
+    def map( f: A => A ): State9[S, A] = State9({ s =>
+      val (ns, x) = run( s )
+      ( ns, f(x) )
+    })
+  }
+
+  def random9(): Int => (Int, Double) = { seed =>
+    val newRandom = new Random( seed ).nextDouble()
+    val newSeed = (newRandom * Int.MaxValue).toInt
+    ( newSeed, newRandom )
+  }
+
+  def example9( x: Int ): Unit = {
+    val computation = for {
+      n1 <- State9(random9())
+      n2 <- State9(random9())
+    } yield {
+      (n1 + n2) / 2.0
+    }
+
+    // Compute the result
+    val result = computation.run( x )
+
+    println( "EXAMPLE #9 - Better State monad" )
     println( s"Result: ${result._2}" )
     println( "" )
   }

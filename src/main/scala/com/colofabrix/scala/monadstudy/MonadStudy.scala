@@ -13,6 +13,15 @@ object MonadStudy {
 
   def main( args: Array[String] ): Unit = {
 
+    println(
+      """
+        |  ~ ~  MONAD STUDY  ~ ~
+        |
+        | For each problem all the various outputs of the exercises must be the same
+        | to demonstrate that the various techniques are equivalent and improve in
+        | usability, cleanliness and expressive power.""".stripMargin
+    )
+
     println( "\n ~ Debuggable ~ \n" )
     val dblNumber = new scala.util.Random().nextDouble()
 
