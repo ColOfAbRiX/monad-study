@@ -2,6 +2,33 @@ package com.colofabrix.scala.monadstudy
 
 import scala.util.Random
 
+/*
+ Description from the article:
+
+   The Haskell random function looks like this
+
+     random :: StdGen → (a,StdGen)
+
+   The idea is that in order to generate a random number you need a seed, and
+   after you've generated the number you need to update the seed to a new value.
+   In a non-pure language the seed can be a global variable so the user  doesn't
+   need to deal with it explicitly. But in a pure language the seed needs to be
+   passed in and out explicitly - and that's what the signature of random
+   describes. Note that this is similar to the debugging case above because we
+   are returning extra data by using a pair. But this time we're passing in
+   extra data too.
+
+   So a function that is conceptually a randomised function a → b can be written
+   as a function a → StdGen -> (b,StdGen) where StdGen is the type of the seed.
+
+   We now must work out how to compose two randomised functions, f and g. The
+   first element of the pair that f returns needs to be passed in as an input to
+   g. But the seed returned from the g also needs to be passed in to f.
+   Meanwhile the 'real' return value of g needs to be passed in as the first
+   argument of f. So we can give this signature for bind:
+
+ */
+
 object Randomised {
 
   /**

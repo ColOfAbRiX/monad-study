@@ -1,5 +1,25 @@
 package com.colofabrix.scala.monadstudy
 
+/*
+
+ Description from the article:
+
+   Consider the the functions sqrt and cbrt that compute the square root and
+   cube root, respectively, of a real number. These are straightforward
+   functions of type Float -> Float (although sqrt will thrown an exception for
+   negative arguments, something we'll ignore).
+
+   Now consider a version of these functions that works with complex numbers.
+   Every complex number, besides zero, has two square roots. Similarly, every
+   non-zero complex number has three cube roots. So we'd like sqrt' and cbrt' to
+   return lists of values. In other words, we'd like
+
+     sqrt',cbrt' :: Complex Float -> [Complex Float]
+
+   We'll call these 'multivalued' functions.
+
+ */
+
 object Multivalued {
 
   case class Complex( x: Double, y: Double ) {
@@ -21,7 +41,6 @@ object Multivalued {
     * return the log as output parameter of the function. The caller will
     * manage this return value.
     */
-
   def sqrt1( c: Complex ): Seq[Complex] = deMoivreRoots( c, 2 )
 
   def cbrt1( c: Complex ): Seq[Complex] = deMoivreRoots( c, 3 )

@@ -1,5 +1,19 @@
 package com.colofabrix.scala.monadstudy
 
+/*
+
+ Description from the article:
+
+   We have functions f and g that both map floats to floats, but we'd like to
+   modify these functions to also output strings for debugging purposes. In
+   Haskell, f and g might have types given by
+
+     f,g :: Float -> Float
+
+   How can we modify the types of f and g to admit side effects?
+
+ */
+
 object Debuggable {
 
   /**
