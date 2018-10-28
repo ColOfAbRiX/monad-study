@@ -332,16 +332,15 @@ object Randomised {
     })
   }
 
-  def random9(): Int => (Int, Double) = { seed =>
+  def random9(): State9[Int, Double] = State9({ seed =>
     val newRandom = new Random( seed ).nextDouble()
-    val newSeed = (newRandom * Int.MaxValue).toInt
-    ( newSeed, newRandom )
-  }
+    ( (newRandom * Int.MaxValue).toInt, newRandom )
+  })
 
   def example9( x: Int ): Unit = {
     val computation = for {
-      n1 <- State9(random9())
-      n2 <- State9(random9())
+      n1 <- random9()
+      n2 <- random9()
     } yield {
       (n1 + n2) / 2.0
     }
