@@ -21,6 +21,7 @@ object Option {
       override def mempty: Option[A] = None
       override def mappend( x: Option[A], y: Option[A] ): Option[A] = {
         (x, y) match {
+          case (None, None) => None
           case (a, None) => a
           case (None, b) => b
           case (Some(a), Some(b)) => Some(am.mappend(a, b))

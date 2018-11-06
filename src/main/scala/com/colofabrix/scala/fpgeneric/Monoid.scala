@@ -5,6 +5,7 @@ trait Monoid[A] {
   def mappend( x: A, y: A ): A
 }
 
+// See: https://www.reddit.com/r/scala/comments/45gqpd/whats_a_monoid/
 object Monoid {
 
   implicit val stringMonoid: Monoid[String] = new Monoid[String] {
@@ -12,14 +13,12 @@ object Monoid {
     override def mappend( x: String, y: String ): String = x + y
   }
 
-  implicit def listMonoid[A]: Monoid[List[A]] = {
-    new Monoid[List[A]] {
-      override def mempty: List[A] = Nil
-      override def mappend( x: List[A], y: List[A] ): List[A] = x ::: y
+  implicit def functionMonoid[A, B: Monoid]: Monoid[A => B] = {
+    val mb = implicitly[Monoid[B]]
+    new Monoid[A => B] {
+      override def mempty: A => B = _ => mb.mempty
+      override def mappend( x: A => B, y: A => B ): A => B = { a => mb.mappend(x(a), y(a)) }
     }
   }
-
-  def fold[A](xs: List[A])(implicit am: Monoid[A]): A =
-    xs.foldLeft(am.mempty)(am.mappend)
 
 }
