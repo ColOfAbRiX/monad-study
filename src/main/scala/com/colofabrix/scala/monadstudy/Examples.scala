@@ -9,10 +9,9 @@ import com.colofabrix.scala.monadstudy.Multivalued.Complex
   * concepts that lie underneath them.
   */
 
-object MonadStudy {
+object Examples {
 
-  def main( args: Array[String] ): Unit = {
-
+  def run(): Unit = {
     println(
       """
         |  ~ ~  MONAD STUDY  ~ ~

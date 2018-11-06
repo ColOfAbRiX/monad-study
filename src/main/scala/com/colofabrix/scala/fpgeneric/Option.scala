@@ -16,7 +16,8 @@ object Option {
     }
   }
 
-  implicit def optionMonoid[A](implicit am: Monoid[A]): Monoid[Option[A]] = {
+  implicit def optionMonoid[A: Monoid]: Monoid[Option[A]] = {
+    val ma = implicitly[Monoid[A]]
     new Monoid[Option[A]] {
       override def mempty: Option[A] = None
       override def mappend( x: Option[A], y: Option[A] ): Option[A] = {
@@ -24,7 +25,7 @@ object Option {
           case (None, None) => None
           case (a, None) => a
           case (None, b) => b
-          case (Some(a), Some(b)) => Some(am.mappend(a, b))
+          case (Some(a), Some(b)) => Some(ma.mappend(a, b))
         }
       }
     }
