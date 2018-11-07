@@ -3,7 +3,7 @@ package com.colofabrix.scala.fpgeneric
 object Examples {
 
   import Option._
-  import Monoid._
+  import String._
 
   // A wrapper to simplify the usage of folding on monoids
   def fold[A: Monoid]( xs: List[A] ): A = {
@@ -12,7 +12,7 @@ object Examples {
   }
 
   // A wrapper to simplify the usage of bind on monads
-  def bind[M[_]: Monad, A, B]( x: M[A] )( f: A => M[B] ): M[B] = {
+  def bind[M[_]: Monad, A, B]( x: M[A] )( f: A  => M[B] ): M[B] = {
     implicitly[Monad[M]].bind(x)(f)
   }
 
@@ -34,16 +34,27 @@ object Examples {
         """.stripMargin
     )
 
+    // Testing the methods of the converters
     optionMonad.bind( optionMonad.unit( "Hello" ) ) { a =>
       Some( s"$a, World!" )
     }
 
+    // Testing the commodity methods
     val some: List[Option[String]] = Some( "Hello" ) :: Some( ", " ) :: Some( " World" ) :: Some( "!" ) :: Nil
-
     map(
       bind( fold( some ) ) { x => Some( x.toUpperCase() ) }
     )( println )
 
+    // Testing the Scala idiomatic code
+    val uppercase = for {
+      a <- Some("simple lowercase sentence")
+      b <- Some("that terminates now")
+    } yield {
+      a.toUpperCase + " " + b.toUpperCase
+    }
+    println(uppercase)
+
+    println("")
   }
 
 }
