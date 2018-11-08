@@ -11,7 +11,7 @@ object Option {
     */
   implicit class OptionOps[A]( o: Option[A] ) {
     def map[B]( f: A => B )( implicit fo: Functor[Option] ) : Option[B] = {
-      fo.map( o )( f )
+      fo.fmap( o )( f )
     }
     def flatMap[B]( f: A => Option[B] )( implicit mo: Monad[Option] ): Option[B] = {
       mo.bind( o )( f )

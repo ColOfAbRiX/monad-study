@@ -40,7 +40,9 @@ object Function1 {
     val mb = implicitly[Monoid[B]]
     new Monoid[A => B] {
       override def mempty: A => B = _ => mb.mempty
-      override def mappend( x: A => B, y: A => B ): A => B = { a => mb.mappend(x(a), y(a)) }
+      override def mappend( x: A => B, y: A => B ): A => B = { a =>
+        mb.mappend(x(a), y(a))
+      }
     }
   }
 
