@@ -7,7 +7,8 @@ case class Some[A]( value: A ) extends Option[A]
 object Option {
 
   /**
-    * Extending the base Option to add Monad methods
+    * Extending the base Option to add Monad methods.
+    * It's an incorporation of the below implicits into the Option ADT
     */
   implicit class OptionOps[A]( o: Option[A] ) {
     def map[B]( f: A => B )( implicit fo: Functor[Option] ) : Option[B] = {
@@ -20,6 +21,7 @@ object Option {
 
   /**
     * Implicit type converter for Monoid[Option]
+    * Implements the real Monoid behaviour for Option
     */
   implicit def optionMonoid[A: Monoid]: Monoid[Option[A]] = {
     val ma = implicitly[Monoid[A]]
@@ -37,6 +39,7 @@ object Option {
 
   /**
     * Implicit type converter for Monad[Option]
+    * Implements the real Monad behaviour for Option
     */
   implicit val optionMonad: Monad[Option] = new Monad[Option] {
     override def unit[A]( a: A ): Option[A] = Some(a)
