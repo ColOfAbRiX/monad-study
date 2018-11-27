@@ -33,10 +33,6 @@ object Examples {
     }
     println(uppercase)
 
-    val test = new WriterW[String]()
-
-    test
-
     println("")
   }
 
