@@ -1,8 +1,9 @@
-package com.colofabrix.scala.fpgeneric
+package com.colofabrix.scala.monads
 
 case class Writer[A, W]( value: A, log: W )
 
 object Writer {
+
   /**
     * Extending the base Writer to add Monad methods.
     * It's an incorporation of the below implicits into the Writer ADT
@@ -10,8 +11,8 @@ object Writer {
   implicit class WriterOps[A, W: Monoid]( w: Writer[A, W] ) {
     type WriterW[J] = Writer[J, W]
 
-    def map[B]( f: A => B )( implicit mw: Monad[WriterW] ): WriterW[B] = {
-      mw.fmap( w )( f )
+    def map[B]( f: A => B )( implicit fw: Functor[WriterW] ): WriterW[B] = {
+      fw.fmap( w )( f )
     }
 
     def flatMap[B]( f: A => WriterW[B] )( implicit mw: Monad[WriterW] ): WriterW[B] = {
@@ -35,4 +36,5 @@ object Writer {
         Writer( newWriter.value, implicitly[Monoid[W]].mappend(ma.log, newWriter.log) )
       }
     }
+
 }

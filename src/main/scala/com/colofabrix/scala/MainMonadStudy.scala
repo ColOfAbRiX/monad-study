@@ -6,6 +6,6 @@ object MainMonadStudy extends App {
   monadstudy.Examples.run()
 
   // Stage 2: using Scala's language features to implement generic types
-  fpgeneric.Examples.run()
+  monads.Examples.run()
 
 }

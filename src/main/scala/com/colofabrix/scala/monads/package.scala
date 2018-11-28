@@ -1,6 +1,6 @@
 package com.colofabrix.scala
 
-package object fpgeneric {
+package object monads {
 
   /**
     * A wrapper to simplify the usage of folding on monoids

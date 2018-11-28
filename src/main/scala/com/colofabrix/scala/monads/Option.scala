@@ -1,4 +1,4 @@
-package com.colofabrix.scala.fpgeneric
+package com.colofabrix.scala.monads
 
 sealed trait Option[+A]
 case object None extends Option[Nothing]

@@ -1,4 +1,4 @@
-package com.colofabrix.scala.fpgeneric
+package com.colofabrix.scala.monads
 
 /**
   * Monoid
