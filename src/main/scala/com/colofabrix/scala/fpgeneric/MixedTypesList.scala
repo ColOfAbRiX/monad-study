@@ -54,6 +54,7 @@ object Function1 {
     */
   implicit def functionMonoid[A, B: Monoid]: Monoid[A => B] = {
     val mb = implicitly[Monoid[B]]
+
     new Monoid[A => B] {
       override def mempty: A => B = _ => mb.mempty
       override def mappend( x: A => B, y: A => B ): A => B = { a =>

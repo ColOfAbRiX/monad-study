@@ -14,6 +14,7 @@ object Option {
     def map[B]( f: A => B )( implicit fo: Functor[Option] ) : Option[B] = {
       fo.fmap( o )( f )
     }
+
     def flatMap[B]( f: A => Option[B] )( implicit mo: Monad[Option] ): Option[B] = {
       mo.bind( o )( f )
     }
@@ -25,8 +26,10 @@ object Option {
     */
   implicit def optionMonoid[A: Monoid]: Monoid[Option[A]] = {
     val ma = implicitly[Monoid[A]]
+
     new Monoid[Option[A]] {
       override def mempty: Option[A] = None
+
       override def mappend( x: Option[A], y: Option[A] ): Option[A] = {
         (x, y) match {
           case (a, None) => a
@@ -43,6 +46,7 @@ object Option {
     */
   implicit val optionMonad: Monad[Option] = new Monad[Option] {
     override def unit[A]( a: A ): Option[A] = Some(a)
+
     override def bind[A, B]( ma: Option[A] )( f: A => Option[B] ): Option[B] = {
       ma match {
         case Some(a) => f(a)

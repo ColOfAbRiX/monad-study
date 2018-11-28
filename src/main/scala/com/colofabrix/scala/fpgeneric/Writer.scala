@@ -1,6 +1,6 @@
 package com.colofabrix.scala.fpgeneric
 
-case class Writer[A, W]( x: A, mw: W )
+case class Writer[A, W]( value: A, log: W )
 
 object Writer {
   /**
@@ -13,22 +13,22 @@ object Writer {
     def map[B]( f: A => B )( implicit mw: Monad[WriterW] ): WriterW[B] = {
       mw.fmap( w )( f )
     }
+
     def flatMap[B]( f: A => WriterW[B] )( implicit mw: Monad[WriterW] ): WriterW[B] = {
       mw.bind( w )( f )
     }
   }
 
-  ///**
-  //  * Implicit type converter for Monad[Writer]
-  //  * Implements the real Monad behaviour for Writer
-  //  */
-  //type WriterW[T] = Writer[T, W]
-  //
-  //implicit val writerMonad: Monad[Writer] = new Monad[Writer]() {
-  //  override def unit[A]( a: A ): Writer[A] = Writer( a, implicitly[Monoid[W]].mempty )
-  //  override def bind[A, B]( ma: Writer[A] )( f: A => Writer[B] ): Writer[B] = {
-  //    val newWriter = f( ma.x )
-  //    Writer( newWriter.x, implicitly[Monoid[W]].mappend(ma.ys, newWriter.ys) )
-  //  }
-  //}
+  /**
+    * Implicit type converter for Monad[Writer]
+    * Implements the real Monad behaviour for Writer
+    */
+  implicit def writerMonad[W: Monoid] = new Monad[({type WriterW[J] = Writer[J, W]})#WriterW]() {
+    override def unit[A]( a: A ): Writer[A, W] = Writer( a, implicitly[Monoid[W]].mempty )
+
+    override def bind[A, B]( ma: Writer[A, W] )( f: A => Writer[B, W] ): Writer[B, W] = {
+      val newWriter = f( ma.value )
+      Writer( newWriter.value, implicitly[Monoid[W]].mappend(ma.log, newWriter.log) )
+    }
+  }
 }

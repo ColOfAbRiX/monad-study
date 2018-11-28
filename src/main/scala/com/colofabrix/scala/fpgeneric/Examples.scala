@@ -4,6 +4,7 @@ object Examples {
 
   import Option._
   import String._
+  import Writer._
 
   def run(): Unit = {
     println(
@@ -34,6 +35,14 @@ object Examples {
     println(uppercase)
 
     println("")
+
+    // Testing writer monad
+    val test = for {
+      i <- Writer(3, "Initial line")
+    } yield {
+      i
+    }
+    println(test)
   }
 
 }
