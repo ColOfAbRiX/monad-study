@@ -23,12 +23,16 @@ object Writer {
     * Implicit type converter for Monad[Writer]
     * Implements the real Monad behaviour for Writer
     */
-  implicit def writerMonad[W: Monoid] = new Monad[({type WriterW[J] = Writer[J, W]})#WriterW]() {
-    override def unit[A]( a: A ): Writer[A, W] = Writer( a, implicitly[Monoid[W]].mempty )
+  implicit def writerMonad[W: Monoid] =
+    new Monad[({ type WriterW[J] = Writer[J, W] })#WriterW]() {
+      // Used this feature:
+      //   https://github.com/fpinscala/fpinscala/blob/7a43335a04679e140c8c4cf7c359fd8a39bbe39f/answers/src/main/scala/fpinscala/monads/Monad.scala#L133
 
-    override def bind[A, B]( ma: Writer[A, W] )( f: A => Writer[B, W] ): Writer[B, W] = {
-      val newWriter = f( ma.value )
-      Writer( newWriter.value, implicitly[Monoid[W]].mappend(ma.log, newWriter.log) )
+      override def unit[A]( a: A ): Writer[A, W] = Writer( a, implicitly[Monoid[W]].mempty )
+
+      override def bind[A, B]( ma: Writer[A, W] )( f: A => Writer[B, W] ): Writer[B, W] = {
+        val newWriter = f( ma.value )
+        Writer( newWriter.value, implicitly[Monoid[W]].mappend(ma.log, newWriter.log) )
+      }
     }
-  }
 }
