@@ -1,4 +1,4 @@
-package com.colofabrix.scala.monadstudy
+package com.colofabrix.scala.inventingmonads
 
 import scala.util.Random
 

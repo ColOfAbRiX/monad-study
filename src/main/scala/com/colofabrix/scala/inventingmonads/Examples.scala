@@ -1,6 +1,6 @@
-package com.colofabrix.scala.monadstudy
+package com.colofabrix.scala.inventingmonads
 
-import com.colofabrix.scala.monadstudy.Multivalued.Complex
+import com.colofabrix.scala.inventingmonads.Multivalued.Complex
 
 /**
   * Some practice with the topics explained in the article:

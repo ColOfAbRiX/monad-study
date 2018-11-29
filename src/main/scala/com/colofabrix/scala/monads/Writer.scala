@@ -1,5 +1,8 @@
 package com.colofabrix.scala.monads
 
+/**
+  * Writer Data Type
+  */
 case class Writer[A, W]( value: A, log: W )
 
 object Writer {
@@ -33,7 +36,10 @@ object Writer {
 
       override def bind[A, B]( ma: Writer[A, W] )( f: A => Writer[B, W] ): Writer[B, W] = {
         val newWriter = f( ma.value )
-        Writer( newWriter.value, implicitly[Monoid[W]].mappend(ma.log, newWriter.log) )
+        Writer(
+          newWriter.value,
+          implicitly[Monoid[W]].mappend(ma.log, newWriter.log)
+        )
       }
     }
 

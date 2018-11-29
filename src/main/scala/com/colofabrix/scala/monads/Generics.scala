@@ -25,13 +25,3 @@ trait Monad[M[_]] extends Functor[M] {
   def join[A]( mma: M[M[A]] ): M[A] = bind(mma){ ma => ma }
   override def fmap[A, B]( ma: M[A] )( f: A => B ): M[B] = bind( ma ) { a => unit(f(a)) }
 }
-
-/**
-  * Comonad
-  */
-trait Comonad[W[_]] extends Functor[W] {
-  def counit[A]( wa: W[A] ): A
-  def duplicate[A]( wa: W[A] ): W[W[A]]
-  def extend[A, B]( wa: W[A] )( f: W[A] => B ): W[B] = fmap(duplicate(wa))(f)
-  override def fmap[A, B]( wa: W[A] )( f: A => B ): W[B]
-}
