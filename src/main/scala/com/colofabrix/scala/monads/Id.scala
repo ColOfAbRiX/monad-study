@@ -17,17 +17,17 @@ object Id {
   }
 
   /**
-    * Implicit type converter for Id[Writer]
+    * Implicit type converter for Monoid[Id]
     * Implements the real Monoid behaviour for Id
     */
   implicit def monoidId[A: Monoid]: Monoid[Id[A]] = new Monoid[Id[A]] {
     private val ma = implicitly[Monoid[A]]
-    override def mempty: Id[A] = ma.mempty
+    override def mempty: Id[A] = Id( ma.mempty )
     override def mappend( x: Id[A], y: Id[A] ): Id[A] = Id( ma.mappend(x.value, y.value) )
   }
 
   /**
-    * Implicit type converter for Id[Writer]
+    * Implicit type converter for Monad[Id]
     * Implements the real Monad behaviour for Id
     */
   implicit val monadId: Monad[Id] = new Monad[Id] {

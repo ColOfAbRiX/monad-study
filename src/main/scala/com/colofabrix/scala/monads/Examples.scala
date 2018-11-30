@@ -11,7 +11,6 @@ object Examples {
     println(
       """
         |  ~ ~  HIGHER KINDED TYPES STUDY  ~ ~
-        |
         """.stripMargin
     )
 

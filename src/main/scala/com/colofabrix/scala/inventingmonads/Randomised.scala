@@ -265,7 +265,7 @@ object Randomised {
     // Compute the result
     val result = computation( x )
 
-    println( "EXAMPLE #7 - Explicit State monad" )
+    println( "EXAMPLE #7 - Scala idiomatic way of monads" )
     println( s"Result: ${result._2}" )
     println( "" )
   }
@@ -311,7 +311,7 @@ object Randomised {
     // Compute the result
     val result = computation( x )
 
-    println( "EXAMPLE #8 - Explicit State monad" )
+    println( "EXAMPLE #8 - Introduce generics" )
     println( s"Result: ${result._2}" )
     println( "" )
   }
