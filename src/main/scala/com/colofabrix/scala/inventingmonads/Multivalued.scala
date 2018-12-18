@@ -21,17 +21,18 @@ package com.colofabrix.scala.inventingmonads
  */
 
 object Multivalued {
+  import Math._
 
   case class Complex( x: Double, y: Double ) {
-    val r: Double = Math.hypot( x, y )
-    val t: Double = Math.atan2( x, y )
+    val r: Double = hypot( x, y )
+    val t: Double = atan2( x, y )
     override def toString: String = s"C(%.3f, %.3f)".format(x, y)
   }
 
   private def deMoivreRoots( c: Complex, roots: Int ): Seq[Complex] = Seq.tabulate( roots ) { n =>
     Complex(
-      Math.pow( c.r, 1 / roots.toDouble ) * Math.cos( (c.t + 2.0 * n * Math.PI) / roots.toDouble ),
-      Math.pow( c.r, 1 / roots.toDouble ) * Math.sin( (c.t + 2.0 * n * Math.PI) / roots.toDouble )
+      pow( c.r, 1 / roots.toDouble ) * cos( (c.t + 2.0 * n * PI) / roots.toDouble ),
+      pow( c.r, 1 / roots.toDouble ) * sin( (c.t + 2.0 * n * PI) / roots.toDouble )
     )
   }
 

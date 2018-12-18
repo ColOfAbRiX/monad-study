@@ -31,15 +31,14 @@ object Writer {
     // Used Scala kind projector:
     //   https://github.com/fpinscala/fpinscala/blob/7a43335a04679e140c8c4cf7c359fd8a39bbe39f/answers/src/main/scala/fpinscala/monads/Monad.scala#L133
     new Monad[({ type λ[J] = Writer[J, W] })#λ]() {
+      private val mw = implicitly[Monoid[W]]
 
-      override def unit[A]( a: A ): Writer[A, W] = Writer( a, implicitly[Monoid[W]].mempty )
+      override def unit[A]( a: A ): Writer[A, W] = Writer( a, mw.mempty )
 
       override def bind[A, B]( ma: Writer[A, W] )( f: A => Writer[B, W] ): Writer[B, W] = {
         val newWriter = f( ma.value )
-        Writer(
-          newWriter.value,
-          implicitly[Monoid[W]].mappend(ma.log, newWriter.log)
-        )
+        val newMonoid = mw.mappend(ma.log, newWriter.log)
+        Writer( newWriter.value, newMonoid )
       }
     }
 

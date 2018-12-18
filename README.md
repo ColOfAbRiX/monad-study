@@ -38,6 +38,12 @@ After that I wanted to develop monads that are not in the standard Scala library
 and I picked Writer as it's simple to understand. For Writer I had to use
 partially applied types and type lambdas .
 
+## Comonads
+
+Carrying on with functional programming objects, the next topic are comonads. I
+start with the generic definition then the basic Identity comonad to practice 
+more the basic techniques of extension used in the step above.
+
 ## Author Information
 
 Fabrizio Colonna (@ColOfAbRiX)
