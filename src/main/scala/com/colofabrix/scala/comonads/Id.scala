@@ -13,6 +13,8 @@ object Id {
   implicit class IdOps[A]( id: Id[A] ) {
     def map[B]( f: A => B )( implicit fi: Functor[Id] ): Id[B] = fi.fmap(id)(f)
     def flatMap[B]( f: A => Id[B] )( implicit mi: Monad[Id] ): Id[B] = mi.bind(id)(f)
+    def extract( implicit wi: Comonad[Id] ): A = wi.extract( this.id )
+    def duplicate( implicit wi: Comonad[Id] ): Id[Id[A]] = wi.duplicate( this.id )
   }
 
   /**
