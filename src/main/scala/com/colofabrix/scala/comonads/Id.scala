@@ -9,10 +9,10 @@ object Id {
     * It's an incorporation of the below implicits into the Writer ADT
     */
   implicit class IdOps[A]( id: Id[A] ) {
-    def extract( implicit wi: Comonad[Id] ): A = wi.extract( id )
-    def duplicate( implicit wi: Comonad[Id] ): Id[Id[A]] = wi.duplicate( id )
-    def coflatMap[B]( f: Id[A] => B )( implicit wi: Comonad[Id] ): Id[B] = wi.extend( id )( f )
-    def map[B]( f: A => B )( implicit wi: Comonad[Id] ): Id[B] = wi.fmap( id )( f )
+    def extract( implicit wid: Comonad[Id] ): A = wid.extract( id )
+    def duplicate( implicit wid: Comonad[Id] ): Id[Id[A]] = wid.duplicate( id )
+    def coflatMap[B]( f: Id[A] => B )( implicit wid: Comonad[Id] ): Id[B] = wid.extend( id )( f )
+    def map[B]( f: A => B )( implicit wid: Comonad[Id] ): Id[B] = wid.fmap( id )( f )
   }
 
   /**

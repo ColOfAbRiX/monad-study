@@ -20,8 +20,8 @@ object Reader {
     */
   implicit def readerMonad[R] = new Monad[({ type λ[U] = Reader[R, U]})#λ]() {
     override def unit[A]( a: A ): Reader[R, A] = Reader( _ => a )
-    override def bind[A, B]( ma: Reader[R, A] )( f: A => Reader[R, B] ): Reader[R, B] = Reader({ r =>
-      f( ma.run(r) ).run( r )
+    override def bind[A, B]( mr: Reader[R, A] )( f: A => Reader[R, B] ): Reader[R, B] = Reader({ r =>
+      f( mr.run(r) ).run( r )
     })
   }
 
