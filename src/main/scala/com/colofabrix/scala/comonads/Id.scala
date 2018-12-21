@@ -5,8 +5,8 @@ case class Id[A]( value: A )
 object Id {
 
   /**
-    * Extending the base Writer to add Monad methods.
-    * It's an incorporation of the below implicits into the Writer ADT
+    * Extending the base Id to add Comonad methods.
+    * It's an incorporation of the below implicits into the Id ADT
     */
   implicit class IdOps[A]( id: Id[A] ) {
     def extract( implicit wid: Comonad[Id] ): A = wid.extract( id )
@@ -16,8 +16,8 @@ object Id {
   }
 
   /**
-    * Implicit type converter for Monad[Id]
-    * Implements the real Monad behaviour for Id
+    * Implicit type converter for Comonad[Id]
+    * Implements the real Comonad behaviour for Id
     */
   implicit def comonadId[A]: Comonad[Id] = new Comonad[Id] {
     override def extract[A]( wa: Id[A] ): A = wa.value
