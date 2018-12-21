@@ -44,6 +44,9 @@ Carrying on with functional programming objects, the next topic are comonads. I
 start with the generic definition then the basic Identity comonad to practice 
 more the basic techniques of extension used in the step above.
 
+There is a simple implementation of a Non-Empty-List comonad that shows the
+meaning of the comonad methors: extract, duplicate and extend.
+
 ## Author Information
 
 Fabrizio Colonna (@ColOfAbRiX)

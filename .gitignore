@@ -6,3 +6,5 @@ target
 *.iws
 .idea
 out
+
+correct_author.sh

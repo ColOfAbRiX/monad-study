@@ -13,21 +13,19 @@ object Examples {
 
     println( "\n ~ Non Empty List Comonad ~ \n" )
 
-    val testNel =
-      NEL("a", Some(
-        NEL("b", Some(
-          NEL("c", None)
-        ))
-      ))
+    val testNel = NEL("a", NEL("s", NEL("d", NEL("f"))))
 
     println(s"Extract:\n  ${testNel.extract}")
-
-    println(s"\nDuplicate:\n  ${testNel.duplicate}")
 
     print("\nFolding of elements:\n  ")
     println(testNel.foldLeft("") { (a, x) =>
       a + x.toUpperCase
     })
+
+    print("\nMapping over the comonad:\n  ")
+    println(testNel.map(_.hashCode))
+
+    println(s"\nDuplicate:\n  ${testNel.duplicate}")
 
     print("\nContextual elaboration of each value:\n  ")
     println(testNel.coflatMap { nel =>

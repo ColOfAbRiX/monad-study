@@ -1,15 +1,30 @@
 package com.colofabrix.scala.comonads
 
-import com.colofabrix.scala.generics.{ Comonad, Functor, Monad }
+import com.colofabrix.scala.generics.{ Comonad, Functor }
 
 /**
   * Non Empty List
   */
 case class NEL[A]( head: A, tail: Option[NEL[A]] ) {
-  override def toString: String = s"H: $head, T:( $tail ) "
+  override def toString: String = {
+    val h = head.toString.replaceAll("\n", "\n  ")
+
+    val t = (tail match {
+      case Some(x) => x.toString
+      case None => "None"
+    }).replaceAll("\n", "\n  ")
+
+    s"\nH: $h\nT: $t"
+  }
 }
 
 object NEL {
+
+  /*
+   Commodity constructors
+   */
+  def apply[A]( head: A ) = new NEL( head, None )
+  def apply[A]( head: A, tail: NEL[A] ) = new NEL(head, Some(tail) )
 
   /**
     * Extending the base NEL to add methods.
@@ -29,8 +44,8 @@ object NEL {
       wnel.fmap( nel )( f )
 
     def foldLeft( a: A )( f: (A, A) => A ): A = nel.tail match {
-      case None => f( a, nel.head )
       case Some(t) => t.foldLeft( f(a, nel.head) )( f )
+      case None => f( a, nel.head )
     }
   }
 
@@ -45,7 +60,7 @@ object NEL {
       NEL( wnel, wnel.tail.map( duplicate ) )
 
     override def fmap[A, B]( wnel: NEL[A] )( f: A => B ): NEL[B] =
-      NEL( f(wnel.head), wnel.tail.map(_.map(f)) )
+      NEL( f(wnel.head), wnel.tail.map( fmap(_)(f) ) )
   }
 
 }
