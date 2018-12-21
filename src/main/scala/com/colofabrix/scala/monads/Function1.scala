@@ -1,5 +1,7 @@
 package com.colofabrix.scala.monads
 
+import com.colofabrix.scala.generics.Monoid
+
 /**
   * Mimicking the Function1 object
   */

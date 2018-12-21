@@ -1,6 +1,6 @@
 package com.colofabrix.scala
 
-package object monads {
+package object generics {
 
   /**
     * A wrapper to simplify the usage of folding on monoids
@@ -8,6 +8,16 @@ package object monads {
   def fold[A: Monoid]( xs: List[A] ): A = {
     val ma = implicitly[Monoid[A]]
     xs.foldLeft( ma.mempty )( ma.mappend )
+  }
+
+  /**
+    * A wrapper to simplify the usage of foldLeft on monads
+    */
+  def foldLeft[M[_]: Monad, A, B]( ma: M[A] )( accumulator: A )( f: (A, A) => B ): M[B] = {
+    val monad = implicitly[Monad[M]]
+    monad.bind( ma ) { current =>
+      monad.unit( f(accumulator, current) )
+    }
   }
 
   /**

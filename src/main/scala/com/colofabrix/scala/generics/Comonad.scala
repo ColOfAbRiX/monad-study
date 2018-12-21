@@ -1,6 +1,4 @@
-package com.colofabrix.scala.comonads
-
-import com.colofabrix.scala.monads.Functor
+package com.colofabrix.scala.generics
 
 /**
   * Comonad

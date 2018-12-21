@@ -1,5 +1,7 @@
 package com.colofabrix.scala.comonads
 
+import com.colofabrix.scala.generics.Comonad
+
 case class Id[A]( value: A )
 
 object Id {

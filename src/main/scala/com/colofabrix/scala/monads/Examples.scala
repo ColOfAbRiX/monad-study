@@ -6,6 +6,7 @@ object Examples {
   import String._
   import Writer._
   import List._
+  import com.colofabrix.scala.generics._
 
   def run(): Unit = {
     println(

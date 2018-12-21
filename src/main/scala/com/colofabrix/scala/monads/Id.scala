@@ -1,5 +1,7 @@
 package com.colofabrix.scala.monads
 
+import com.colofabrix.scala.generics.{ Functor, Monad, Monoid }
+
 case class Id[A]( value: A )
 
 /**

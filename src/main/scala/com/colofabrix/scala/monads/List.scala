@@ -1,5 +1,7 @@
 package com.colofabrix.scala.monads
 
+import com.colofabrix.scala.generics.{ Monad, Monoid }
+
 /**
   * Mimicking the List object
   */
