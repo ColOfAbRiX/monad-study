@@ -1,5 +1,21 @@
 # Studying Monads in Scala
 
+## How to use these examples
+
+These examples have been developed throughout my learning process towards full
+functional programming and their size grew little by little.
+
+The logical order to follow is by starting at the main module `MainMonadStudy`
+and from there follow the each example, top to bottom. This will lead you to
+discover the data structures I created, what problems I faced and how I solved
+them.
+
+Names on the examples might not be the familiar ones and might differ from the
+standard Scala ones. I've chosen this approach on purpose to put myself in a
+situation where I really had to think what is happening, without the prior
+knowledge of Scala and possibly of Haskell. But sometimes it really becomes
+confusing!
+
 ## You could have invented monads
 
 Some practice with the topics explained in the article

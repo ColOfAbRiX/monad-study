@@ -14,4 +14,5 @@ object MainMonadStudy extends App {
   // Stage 4: going further into FP and working with monad transformers
   transformers.Examples.run()
 
+  println("")
 }

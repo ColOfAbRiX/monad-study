@@ -19,7 +19,7 @@ object Id {
   }
 
   /**
-    * Implicit type converter for Monoid[Id]
+    * Type class instance for Monoid[Id]
     * Implements the real Monoid behaviour for Id
     */
   implicit def monoidId[A: Monoid]: Monoid[Id[A]] = new Monoid[Id[A]] {
@@ -29,7 +29,7 @@ object Id {
   }
 
   /**
-    * Implicit type converter for Monad[Id]
+    * Type class instance for Monad[Id]
     * Implements the real Monad behaviour for Id
     */
   implicit val monadId: Monad[Id] = new Monad[Id] {

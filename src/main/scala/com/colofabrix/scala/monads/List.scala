@@ -1,6 +1,6 @@
 package com.colofabrix.scala.monads
 
-import com.colofabrix.scala.generics.{ Monad, Monoid }
+import com.colofabrix.scala.generics.{ Functor, Monad, Monoid }
 
 /**
   * Mimicking the List object
@@ -8,7 +8,15 @@ import com.colofabrix.scala.generics.{ Monad, Monoid }
 object List {
 
   /**
-    * Implicit type converter for Monoid[List]
+    * Type class instance for Functor[List]
+    * Implements the real Monad behaviour for List
+    */
+  implicit val listFunctor: Functor[List] = new Functor[List] {
+    override def fmap[A, B]( fa: List[A] )( f: A => B ): List[B] = fa.map( f )
+  }
+
+  /**
+    * Type class instance for Monoid[List]
     * Implements the real Monoid behaviour for List
     */
   implicit def listMonoid[A]: Monoid[List[A]] = {
@@ -19,7 +27,7 @@ object List {
   }
 
   /**
-    * Implicit type converter for Monad[List]
+    * Type class instance for Monad[List]
     * Implements the real Monad behaviour for List
     */
   implicit val listMonad: Monad[List] = new Monad[List] {

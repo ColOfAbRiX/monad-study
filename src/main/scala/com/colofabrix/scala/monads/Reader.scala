@@ -17,7 +17,7 @@ object Reader {
   }
 
   /**
-    * Implicit type converter for Monad[Reader]
+    * Type class instance for Monad[Reader]
     * Implements the real Monad behaviour for Reader
     */
   implicit def readerMonad[R] = new Monad[({ type λ[U] = Reader[R, U]})#λ]() {

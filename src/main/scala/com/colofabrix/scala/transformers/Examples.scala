@@ -1,6 +1,7 @@
 package com.colofabrix.scala.transformers
 
 import com.colofabrix.scala.monads._
+import com.colofabrix.scala.monads.List._
 
 object Examples {
 
@@ -24,7 +25,14 @@ object Examples {
         y.toUpperCase()
       }
     }
-    println(result)
-  }
+    println(s"\nWithout transformer:\n  $result")
 
+    // Let's try with the OptionT monad transformer
+    val result2 = (for {
+      x <- OptionT( myListOption )
+    } yield {
+      x.toUpperCase()
+    }).value
+    println(s"\nUsing OptionT:\n  $result")
+  }
 }

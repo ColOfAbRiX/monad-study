@@ -18,7 +18,7 @@ object Id {
   }
 
   /**
-    * Implicit type converter for Comonad[Id]
+    * Type class instance for Comonad[Id]
     * Implements the real Comonad behaviour for Id
     */
   implicit def comonadId[A]: Comonad[Id] = new Comonad[Id] {

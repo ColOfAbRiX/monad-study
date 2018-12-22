@@ -50,7 +50,7 @@ object NEL {
   }
 
   /**
-    * Implicit type converter for Comonad[NEL]
+    * Type class instance for Comonad[NEL]
     * Implements the real Comonad behaviour for NEL
     */
   implicit def nelComonad: Comonad[NEL] = new Comonad[NEL] {

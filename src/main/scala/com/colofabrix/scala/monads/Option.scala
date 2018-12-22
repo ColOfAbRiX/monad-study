@@ -26,7 +26,7 @@ object Option {
   }
 
   /**
-    * Implicit type converter for Monoid[Option]
+    * Type class instance for Monoid[Option]
     * Implements the real Monoid behaviour for Option
     */
   implicit def optionMonoid[A: Monoid]: Monoid[Option[A]] = {
@@ -46,7 +46,7 @@ object Option {
   }
 
   /**
-    * Implicit type converter for Monad[Option]
+    * Type class instance for Monad[Option]
     * Implements the real Monad behaviour for Option
     */
   implicit val optionMonad: Monad[Option] = new Monad[Option] {

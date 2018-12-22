@@ -8,7 +8,7 @@ import com.colofabrix.scala.generics.Monoid
 object Function1 {
 
   /**
-    * Implicit type converter for Monoid[A => B]
+    * Type class instance for Monoid[A => B]
     * Implements the real Monoid behaviour for A => B
     */
   implicit def functionMonoid[A, B: Monoid]: Monoid[A => B] = new Monoid[A => B] {

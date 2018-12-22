@@ -26,7 +26,7 @@ object Writer {
   }
 
   /**
-    * Implicit type converter for Monad[Writer]
+    * Type class instance for Monad[Writer]
     * Implements the real Monad behaviour for Writer
     */
   implicit def writerMonad[W: Monoid] =

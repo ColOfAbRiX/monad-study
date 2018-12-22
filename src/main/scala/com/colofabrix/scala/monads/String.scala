@@ -8,7 +8,7 @@ import com.colofabrix.scala.generics.Monoid
 object String {
 
   /**
-    * Implicit type converter for Monoid[String]
+    * Type class instance for Monoid[String]
     * Implements the real Monoid behaviour for String
     */
   implicit val stringMonoid: Monoid[String] = new Monoid[String] {
