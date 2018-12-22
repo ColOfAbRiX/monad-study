@@ -8,7 +8,10 @@ object MainMonadStudy extends App {
   // Stage 2: using Scala's language features to implement generic types
   monads.Examples.run()
 
-  // Stage 3: get more comfortable with functional types working con comonads
+  // Stage 3: comonads are duals to monads. Getting comfortable with FP
   comonads.Examples.run()
+
+  // Stage 4: going further into FP and working with monad transformers
+  transformers.Examples.run()
 
 }
