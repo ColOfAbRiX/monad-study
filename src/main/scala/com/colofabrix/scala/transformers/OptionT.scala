@@ -16,8 +16,8 @@ case class OptionT[M[_], A]( value: M[Option[A]] ) {
 
   def flatMap[B]( f: A => OptionT[M, B] )( implicit mm: Monad[M] ): OptionT[M, B] =
     OptionT(mm.bind(value) {
-      case Some(x) => f(x).value
       case None => mm.unit(None)
+      case Some(x) => f(x).value
     })
 
 }

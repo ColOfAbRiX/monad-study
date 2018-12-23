@@ -2,10 +2,10 @@ package com.colofabrix.scala.monads
 
 object Examples {
 
+  import List._
   import Option._
   import String._
   import Writer._
-  import List._
   import com.colofabrix.scala.generics._
 
   def run(): Unit = {

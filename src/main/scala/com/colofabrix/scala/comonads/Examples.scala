@@ -1,6 +1,6 @@
 package com.colofabrix.scala.comonads
 
-import NEL._
+import com.colofabrix.scala.comonads.NEL._
 
 object Examples {
 
