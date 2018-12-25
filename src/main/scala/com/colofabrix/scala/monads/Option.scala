@@ -12,17 +12,21 @@ case class Some[A]( value: A ) extends Option[A]
 object Option {
 
   /**
-    * Extending the base Option to add Monad methods.
+    * Extending the base Option to add Monad and Monoid methods.
     * It's an incorporation of the below implicits into the Option ADT
     */
   implicit class OptionOps[A]( o: Option[A] ) {
-    def map[B]( f: A => B )( implicit fo: Functor[Option] ) : Option[B] = {
+    def map[B]( f: A => B )( implicit fo: Functor[Option] ) : Option[B] =
       fo.fmap( o )( f )
-    }
 
-    def flatMap[B]( f: A => Option[B] )( implicit mo: Monad[Option] ): Option[B] = {
+    def flatMap[B]( f: A => Option[B] )( implicit mo: Monad[Option] ): Option[B] =
       mo.bind( o )( f )
-    }
+
+    def empty( implicit mf: Monoid[Option[A]] ): Option[A] =
+      mf.mempty
+
+    def ++( that: Option[A] )( implicit mf: Monoid[Option[A]] ): Option[A] =
+      mf.mappend( o, that )
   }
 
   /**

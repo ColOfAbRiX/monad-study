@@ -2,6 +2,9 @@ package com.colofabrix.scala.transformers
 
 import com.colofabrix.scala.generics.{ Functor, Monad }
 
+/**
+  * List Option Monad Transformer
+  */
 case class ListT[M[_], A]( value: M[List[A]]) {
 
   def map[B]( f: A => B )( implicit fl: Functor[M] ): ListT[M, B] =

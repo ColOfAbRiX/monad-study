@@ -12,19 +12,28 @@ object Reader {
     */
   implicit class ReaderOps[R, A]( reader: Reader[R, A] ) {
     type ReaderS[S] = Reader[S, A]
-    def map[B]( f: R => B )( implicit fr: Functor[ReaderS] ): ReaderS[B] = fr.fmap( reader )( f )
-    def flatMap[B]( f: R => ReaderS[B] )( implicit mr: Monad[ReaderS] ): ReaderS[B] = mr.bind( reader )( f )
+
+    def map[B]( f: R => B )( implicit fr: Functor[ReaderS] ): ReaderS[B] =
+      fr.fmap( reader )( f )
+
+    def flatMap[B]( f: R => ReaderS[B] )( implicit mr: Monad[ReaderS] ): ReaderS[B] =
+      mr.bind( reader )( f )
   }
 
   /**
     * Type class instance for Monad[Reader]
     * Implements the real Monad behaviour for Reader
     */
-  implicit def readerMonad[R] = new Monad[({ type λ[U] = Reader[R, U]})#λ]() {
-    override def unit[A]( a: A ): Reader[R, A] = Reader( _ => a )
-    override def bind[A, B]( mr: Reader[R, A] )( f: A => Reader[R, B] ): Reader[R, B] = Reader({ r =>
-      f( mr.run(r) ).run( r )
-    })
-  }
+  implicit def readerMonad[R] =
+    // This time I use a special compile plugin for the kind projector
+    new Monad[Reader[R, ?]]() {
+      override def unit[A]( a: A ): Reader[R, A] =
+        Reader( _ => a )
+
+      override def bind[A, B]( mr: Reader[R, A] )( f: A => Reader[R, B] ): Reader[R, B] =
+        Reader({ r =>
+          f( mr.run(r) ).run( r )
+        })
+    }
 
 }

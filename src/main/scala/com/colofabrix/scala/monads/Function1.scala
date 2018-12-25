@@ -8,6 +8,18 @@ import com.colofabrix.scala.generics.Monoid
 object Function1 {
 
   /**
+    * Extending the base Function1 to add Monoid methods.
+    * It's an incorporation of the below implicits into the Function1 ADT
+    */
+  implicit class Function1Ops[A, B]( func: A => B ) {
+    def empty( implicit mf: Monoid[A => B] ): A => B =
+      mf.mempty
+
+    def ++( that: A => B )( implicit mf: Monoid[A => B] ): A => B =
+      mf.mappend( func, that )
+  }
+
+  /**
     * Type class instance for Monoid[A => B]
     * Implements the real Monoid behaviour for A => B
     */
