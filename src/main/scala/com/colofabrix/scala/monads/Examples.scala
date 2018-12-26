@@ -4,7 +4,7 @@ object Examples {
 
   import List._
   import Option._
-  import String._
+  import com.colofabrix.scala.monoids.String._
   import Writer._
   import com.colofabrix.scala.generics._
 
@@ -14,7 +14,6 @@ object Examples {
         |  ~ ~  HIGHER KINDED TYPES STUDY  ~ ~
         """.stripMargin
     )
-
 
     //
     // Using extension methods to add features to the basic ADT objects without

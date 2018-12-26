@@ -1,4 +1,4 @@
-package com.colofabrix.scala.monads
+package com.colofabrix.scala.monoids
 
 import com.colofabrix.scala.generics.Monoid
 
