@@ -10,6 +10,6 @@ case class WriterT[M[_], A, W: Monoid]( value: M[Writer[A, W]] ) {
     WriterT(m.fmap(value)(_.map(f)))
 
   def flatMap[B]( f: A => WriterT[M, B, W] )( implicit m: Monad[M] ): WriterT[M, B, W] =
-    WriterT( m.bind(value)(f(_).value) )
+    WriterT( m.bind(value)( w => f(w.value).value ) )
 
 }

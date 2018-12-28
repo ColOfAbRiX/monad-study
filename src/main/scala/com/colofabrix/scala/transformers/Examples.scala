@@ -40,8 +40,6 @@ object Examples {
     println( "\n ~ ListT Transformer ~ \n" )
 
     val myOptionList: Option[List[String]] = Some("a" :: "s" :: "d" :: "f" :: Nil)
-
-
     val result3 = for {
       x <- myOptionList
     } yield {
@@ -59,5 +57,29 @@ object Examples {
       x.toUpperCase()
     }).value
     println(s"\nUsing ListT:\n  $result4")
+
+    println( "\n ~ More complex example ~ \n" )
+
+    // Fakes to find all the users that contains a specific name
+    def findUsersByName( name: String ): ListT[Option, String] = ListT(
+      if( name.length >= 5 ) {
+        Some(Seq.tabulate(name.length - 5)(i => s"${name}_$i").toList)
+      } else {
+        None
+      }
+    )
+
+    // Fakes to find the companies associated with a user
+    def findCompanyByUser( user: String ): ListT[Option, String] = ListT(
+      Some(s"${user}_company" :: Nil)
+    )
+
+    // Using the above function to watch transformers in action
+    val result5 = (for {
+      user <- findUsersByName("fabrizio")
+      company <- findCompanyByUser(user)
+    } yield company).value
+    println(s"Result: $result5")
+
   }
 }
