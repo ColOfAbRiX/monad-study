@@ -21,6 +21,15 @@ object Reader {
   }
 
   /**
+    * Type class instance for Functor[Reader]
+    * Implements the real Functor behaviour for Reader
+    */
+  implicit def readerFunctor[R] = new Functor[Reader[R, ?]] {
+    override def fmap[A, B]( fa: Reader[R, A] )( f: A => B ): Reader[R, B] =
+      Reader( r => f(fa.run(r)) )
+  }
+
+  /**
     * Type class instance for Monad[Reader]
     * Implements the real Monad behaviour for Reader
     */
