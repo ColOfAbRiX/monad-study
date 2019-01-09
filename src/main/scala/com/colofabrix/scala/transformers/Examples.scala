@@ -9,7 +9,7 @@ object Examples {
   def run(): Unit = {
     println(
       """
-        |  ~ ~  MONAD TRANFORMERS STUDY  ~ ~
+        |  ~ ~  MONAD TRANSFORMERS STUDY  ~ ~
         """.stripMargin
     )
 
@@ -76,7 +76,7 @@ object Examples {
 
     // Using the above function to watch transformers in action
     val result5 = (for {
-      user <- findUsersByName("fabrizio")
+      user    <- findUsersByName("fabrizio")
       company <- findCompanyByUser(user)
     } yield company).value
     println(s"Result: $result5")

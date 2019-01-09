@@ -33,7 +33,7 @@ object Examples {
     val result2 = testNel.map(_.hashCode)
     println(s"\nMapping over the comonad:\n  $result2")
 
-    // Comonad.dupliate
+    // Comonad.duplicate
     println(s"\nDuplicate:\n  ${testNel.duplicate}")
 
     // Comonad.coflatMap
@@ -56,21 +56,27 @@ object Examples {
     println( "\n ~ Using a reader monad ~ \n" )
 
     // "Configuration" that will be used by the Reader monad
-    val config = " * Sample configuration for the Reader monad * "
+    val config = "* Sample config *"
     // Function that uses the configuration
-    val elaboration: String => String = { c =>
-      s"The length of the config is: ${c.length} characters"
+    val configLength: String => String = { c =>
+      s"Config length: ${c.length} characters"
     }
+    val configUppercase: String => String = _.toUpperCase
 
     println(s"Configuration:\n  $config")
 
-    val result4 = Reader( elaboration ).run( config )
-    println(s"\nReader monad result:\n  $result4")
+    val result5 = Reader( configLength ).run( config )
+    println(s"\nReader monad result:\n  $result5")
 
     println( "\n ~ And then reversing it with the Product comonad ~ \n" )
 
-    val test = Product( config, elaboration(config) )
-      .coflatMap { x => println(x); x }
+    val test = Product( config, configLength(config) )
+      .coflatMap { outer =>
+        Product( config, configUppercase(config) )
+          .coflatMap { inner =>
+            s"Result: ${outer.extract} + ${inner.extract}"
+          }
+      }
 
     println( test )
     println("")

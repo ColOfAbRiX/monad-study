@@ -5,7 +5,13 @@ import com.colofabrix.scala.generics.Comonad
 /**
   * Product comonad, aka CoReaader
   */
-case class Product[R, A]( ask: R, extract: A )
+case class Product[R, A]( ask: R, extract: A ) {
+  override def toString: String = {
+    val h = ask.toString.replaceAll("\n", "\n  ")
+    val r = extract.toString.replaceAll("\n", "\n  ")
+    s"Product(\n  $h,\n  $r\n)"
+  }
+}
 
 object Product {
 
