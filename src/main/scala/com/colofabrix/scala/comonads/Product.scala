@@ -3,7 +3,7 @@ package com.colofabrix.scala.comonads
 import com.colofabrix.scala.generics.Comonad
 
 /**
-  * Product comonad, aka CoReaader
+  * Product comonad, aka CoReaader, aka Env
   */
 case class Product[R, A]( ask: R, extract: A ) {
   override def toString: String = {
