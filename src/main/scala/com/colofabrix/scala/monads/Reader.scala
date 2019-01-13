@@ -6,6 +6,8 @@ case class Reader[R, A]( run: R => A )
 
 object Reader {
 
+  def ask[R]: Reader[R, R] = Reader( r => r )
+
   /**
     * Extending the base Reader to add Monad methods.
     * It's an incorporation of the below implicits into the Reader ADT

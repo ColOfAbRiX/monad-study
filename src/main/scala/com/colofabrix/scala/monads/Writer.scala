@@ -9,6 +9,8 @@ case class Writer[A, W]( value: A, log: W )
 
 object Writer {
 
+  def tell[A, W]( w: W ): Writer[Unit, W] = Writer( (), w )
+
   /**
     * Extending the base Writer to add Monad methods.
     * It's an incorporation of the below implicits into the Writer ADT
