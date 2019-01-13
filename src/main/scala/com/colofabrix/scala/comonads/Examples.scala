@@ -3,6 +3,8 @@ package com.colofabrix.scala.comonads
 import com.colofabrix.scala.comonads.NEL._
 import com.colofabrix.scala.monads.Reader
 
+import scala.util.Random
+
 object Examples {
 
   def run(): Unit = {
@@ -70,7 +72,7 @@ object Examples {
 
     println( "\n ~ And then reversing it with the Product comonad ~ \n" )
 
-    val test = Product( config, configLength(config) )
+    val result6 = Product( config, configLength(config) )
       .coflatMap { outer =>
         Product( config, configUppercase(config) )
           .coflatMap { inner =>
@@ -78,7 +80,16 @@ object Examples {
           }
       }
 
-    println( test )
+    println( result6 )
+
+    //
+    // Store Comonad
+    //
+
+    println( "\n ~ Using a store comonad ~ \n" )
+
+    val randoms = List.fill( 4 )( new Random().nextInt() )
+
     println("")
   }
 
