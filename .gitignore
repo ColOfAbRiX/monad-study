@@ -6,5 +6,6 @@ target
 *.iws
 .idea
 out
-
-correct_author.sh
+.bloop
+.history
+.metals

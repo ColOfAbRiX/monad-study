@@ -17,5 +17,8 @@ object MainMonadStudy extends App {
   // Stage 5: more FP, working with trampolining
   trampolines.Examples.run()
 
+  // Stage 6: more FP, testing the continuation passing style
+  continuations.Examples.run()
+
   println("")
 }

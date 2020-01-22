@@ -81,5 +81,6 @@ object Examples {
     } yield company).value
     println(s"Result: $result5")
 
+    println("")
   }
 }
