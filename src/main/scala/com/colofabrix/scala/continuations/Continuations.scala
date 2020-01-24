@@ -63,20 +63,31 @@ object Continuations {
   // The container is in fact a monad for which I can write the monad methods
   // (I'm not proving the monad laws, though)
   //
-  implicit class Container3Ops[A](container: Container3[A]) {
-
+  implicit class Container3Ops[A](self: Container3[A]) {
     def pure[A](value: (Either[Throwable, A] => Unit) => Unit): Container3[A] = Container3(value)
-    def map[B](f: A => B): Container3[B] = {
+
+    def map[B](f: A => B): Container3[B] = pure[B] { cb =>
+      self.unsafeRunAsync { result =>
+        cb(result.map(f))
+      }
     }
-    def flatMap[B](f: A => Container3[B]): Container3[B] = Container3 { cb =>
-      container.unsafeRunAsync(cb)
+
+    def flatMap[B](f: A => Container3[B]): Container3[B] = pure[B] { cb =>
+      self.unsafeRunAsync { result =>
+        result match {
+          case Left(e)  => cb(Left(e))
+          case Right(a) => f(a).unsafeRunAsync(cb)
+        }
+      }
     }
   }
 
-  def triple3(n: Double) = Container3[Double] { cb =>
+  def triple3(n: Double): Container3[Double] = Container3[Double] { cb =>
     cb(Right(n * 3.0))
   }
 
-  // Final revelation: Container3[A] is the IO monad with async computation
+  // Final revelation: Container3[A] is in fact the IO monad with async computation
+
+  type Async[A] = Container3[A]
 
 }

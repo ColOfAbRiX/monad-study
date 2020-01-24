@@ -23,7 +23,7 @@ object Examples {
     def printerError[A](result: Either[Throwable, A]): Unit = {
       result match {
         case Left(error)  => println(error.toString())
-        case Right(value) => println(s"Square root is: ${value.toString()}")
+        case Right(value) => println(s"The result is: ${value.toString()}")
       }
     }
     sqrt2(4.0, printerError)
@@ -40,7 +40,21 @@ object Examples {
 
 
     println( "\n ~ The wrapper/container is a monad ~ \n" )
-    sqrt3(4.0).map(x => x - 5.0)
+
+    def asyncCalculation(value: Double) = {
+      for {
+        root         <- sqrt3(value)
+        doubleString <- Container3[String] { cb =>
+                          val double = (root * 2.0).toString()
+                          cb(Right(double))
+                        }
+      } yield {
+        doubleString.length()
+      }
+    }
+
+    asyncCalculation(144.0).unsafeRunAsync(printerError)
+    asyncCalculation(-5.0).unsafeRunAsync(printerError)
 
     println("")
   }
