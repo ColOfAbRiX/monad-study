@@ -1,5 +1,21 @@
 # Studying Monads in Scala
 
+## Not just monads
+
+With time I worked more and more on the patterns of functional programming and
+I used this project for my experimentations.
+
+So far this repository contains exercises, works and notes on:
+
+* Monoids
+* Monads
+* Comonads
+* Parametric polymorphism
+* Transformers
+* Trampolining
+* Continuations
+* Lambda calculus
+
 ## How to use these examples
 
 These examples have been developed throughout my learning process towards full
@@ -23,12 +39,12 @@ Some practice with the topics explained in the article
 
 These exercises are aimed at understanding how monads got developed and the
 concepts that lie underneath them.
-  
+
 Following the page, here are developed 3 monads:
 
 * Writer
 * List
-* State 
+* State
 
 Each exercise is structured such that monads arise as a generalization of a
 common problem.
@@ -36,7 +52,7 @@ common problem.
 First a problem is presented in the form of "I have two functions to wire
 together with some code" and then, via a series of steps, the exercise tries to
 solve the problem via auxiliary function, generalization and abstraction until
-we reach a very generic solution: a monad. 
+we reach a very generic solution: a monad.
 
 [1]: http://blog.sigfpe.com/2006/08/you-could-have-invented-monads-and.html
 
@@ -57,7 +73,7 @@ partially applied types and type lambdas .
 ## Comonads
 
 Carrying on with functional programming objects, the next topic are comonads. I
-start with the generic definition then the basic Identity comonad to practice 
+start with the generic definition then the basic Identity comonad to practice
 more the basic techniques of extension used in the step above.
 
 There is a simple implementation of a Non-Empty-List comonad that shows the
